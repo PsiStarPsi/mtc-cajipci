@@ -1,0 +1,10 @@
+#summary CAJIPCI firmware.
+
+= Introduction =
+
+This page describes the firmware used to control the CAJIPCI board.
+
+
+= Details =
+
+DSPCPCI firmware is imported into trunk/firmware. See revision 1.
