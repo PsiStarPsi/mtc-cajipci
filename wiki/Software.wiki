@@ -6,4 +6,4 @@ This page describes the driver and userland software used for interfacing with C
 
 = Details =
 
-Original DSPCPCI driver is imported into trunk/software.
+Original DSPCPCI driver is imported into trunk/software. See revision 1.
