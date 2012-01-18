@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/green-circle.png</file>
+        <file>img/red-circle.png</file>
+        <file>packets/command-packet-for-flow-control.20110718.packet</file>
+        <file>img/icon.png</file>
+    </qresource>
+</RCC>
