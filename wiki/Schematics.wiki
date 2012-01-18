@@ -1,0 +1,9 @@
+#summary CAJIPCI schematics
+
+= Introduction =
+
+This page describes the status of the CAJIPCI schematics.
+
+= Details =
+
+Learning PADS.
