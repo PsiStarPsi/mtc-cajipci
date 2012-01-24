@@ -6,4 +6,5 @@ This page will contain a list of parts, their descriptions, and associated datas
 
 = Parts List =
 
-To be added.
+||Part||Description||Datasheet||
+||CDCE62005||5/10 Outputs Clock Generator/Jitter Cleaner with Integrated Dual VCO||[http://www.ti.com/lit/gpn/cdce62005 here]||
