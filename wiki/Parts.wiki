@@ -6,5 +6,6 @@ This page will contain a list of parts, their descriptions, and associated datas
 
 = Parts List =
 
-||Part||Description||Datasheet||
-||CDCE62005||5/10 Outputs Clock Generator/Jitter Cleaner with Integrated Dual VCO||[http://www.ti.com/lit/gpn/cdce62005 here]||
+||Part||Description||Datasheet||Decal||
+||CDCE62005||5/10 Outputs Clock Generator/Jitter Cleaner with Integrated Dual VCO||[http://www.ti.com/lit/gpn/cdce62005 here]|| *NO* ||
+||5569263-1||CONN MOD RJ45 JACK 12PORT 8-8 R/A PCB||[http://documents.tycoelectronics.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=5569263&DocType=CD&DocLang=EN here] || *NO* ||
