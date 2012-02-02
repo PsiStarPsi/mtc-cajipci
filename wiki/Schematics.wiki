@@ -2,8 +2,10 @@
 
 = Introduction =
 
-This page describes the status of the CAJIPCI schematics.
+The CAJIPCI schematics are currently under development.  Many of the necessary decals have been acquired from existing libraries.  So far the only decal created from scratch is for part # DS90LV019TM.
 
 = Details =
 
-Learning PADS.
+02/02/2012  GPS and crystal oscillator parts need to be chosen, then added to schematic.  
+
+01/31/2012  Learning PADS.
