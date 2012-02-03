@@ -14,7 +14,7 @@ This page will contain a list of parts, their descriptions, and associated datas
 ||87833-1420||Jtag 2mm|| [http://www.molex.com/pdm_docs/sd/878331420_sd.pdf here] || *YES*||
 ||ASE-22.000MHZ-ET||22.000MHz Oscillator || [http://www.abracon.com/Oscillators/ASEseries.pdf here ] || *YES* ||
 ||MPC9448FA||IC CLK FAN BUFF MUX 1:12|| [http://www.datasheetarchive.com/dl/Datasheets-301/15514.pdf here] || *YES* ||
-||MX25L3206EM2I-12G|| 32MBit Flash SPI || [http://www.macronix.com/QuickPlace/hq/PageLibrary4825740B00298A3B.nsf/h_Index/BE589E630F06F981482574C0001EE377/$File/ProductSelectionGuide.pdf here] || *NO* ||
+||MX25L3206EM2I-12G|| 32MBit Flash SPI || [http://www.macronix.com/QuickPlace/hq/PageLibrary4825740B00298A3B.nsf/h_Index/3F21BAC2E121E17848257639003A3146/$File/MX25L3206E,%203V,%2032Mb,%20v1.1.pdf here] || *NO* ||
 ||N/A||CPCI brackets|| N/A || *YES* ||
 ||N/A||CPCI Backplate connector||N/A|| *YES* ||
 ||N/A||CPCI Wedge lock||N/A|| *YES* ||
