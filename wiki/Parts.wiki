@@ -13,6 +13,7 @@ This page will contain a list of parts, their descriptions, and associated datas
 ||DS90LV019TM-ND||LVDS driver receiver||[http://www.ti.com/lit/ds/symlink/ds90lv019.pdf here] || *YES* ||
 ||87833-1420||Jtag 2mm|| [http://www.molex.com/pdm_docs/sd/878331420_sd.pdf here] || *YES*||
 ||ASE-22.000MHZ-ET||22.000MHz Oscillator || [http://www.abracon.com/Oscillators/ASEseries.pdf here ] || *YES* ||
+||MPC9448FA||IC CLK FAN BUFF MUX 1:12|| [http://www.datasheetarchive.com/dl/Datasheets-301/15514.pdf here] || *YES* ||
 ||N/A||CPCI brackets|| N/A || *YES* ||
 ||N/A||CPCI Backplate connector||N/A|| *YES* ||
 ||N/A||CPCI Wedge lock||N/A|| *YES* ||
