@@ -2,7 +2,7 @@
 
 = Introduction =
 
-The CAJIPCI schematics are currently under development.  Many of the necessary decals have been acquired from existing libraries.  So far the only decal created from scratch is for part # DS90LV019TM.
+The CAJIPCI schematics are currently under development.  Many of the necessary decals have been acquired from existing libraries.
 
 = Details =
 02/07/2012 GPS abandoned in favor of an SMA differential clock input. Schematic finished exept for the power filter for the jitter cleaners.
