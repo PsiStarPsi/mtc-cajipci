@@ -22,7 +22,8 @@ This page will contain a list of parts, their descriptions, and associated datas
 || RNS006 ||  ||  || *YES* ||
 || TH_TESTPT ||  ||  || *YES* ||
 || TPS3828_33 ||  ||  || *YES* ||
-|| XCF02S ||  ||  || *YES* ||
+|| XCF02S || IC PROM SRL FOR 2M GATE 20-TSSOP || [http://www.xilinx.com/support/documentation/data_sheets/ds123.pdf here] || *YES* ||
+|| LM319M-ND || IC COMPARATOR DUAL HI SPD 14SOIC || [http://www.ti.com/lit/ds/symlink/lm119.pdf here] || *YES* ||
 ||N/A||CPCI brackets|| N/A || *YES* ||
 ||N/A||CPCI Backplate connector||N/A|| *YES* ||
 ||N/A||CPCI Wedge lock||N/A|| *YES* ||
