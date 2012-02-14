@@ -28,4 +28,4 @@ This page will contain a list of parts, their descriptions, and associated datas
 ||N/A||CPCI Wedge lock||N/A|| *YES* || ? || 1 ||
 || EPA.00.250.NTN || LEMO connectors || [http://intra.lemo.ch/catalog/ROW/UK_English/00and01Coaxial_en.pdf here] || *YES*|| ?? || 4 ||
 || n/a || SMA connectors || n/a || *YES* || ? || 4 ||
-||RJSAE-5381-08 || RJ45 connectors || n/a || *YES* || $14.86 || 3 ||
+||RJSAE-5381-08 || RJ45 connectors || [http://www.amphenolcanada.com/ProductSearch/drawings/AC/RJSAE538x08x.pdf here] || *YES* || $14.86 || 3 ||
