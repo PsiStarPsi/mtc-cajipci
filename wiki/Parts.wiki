@@ -16,7 +16,16 @@ This page will contain a list of parts, their descriptions, and associated datas
 || MX25L6406EMI-12G || 64MBit Flash SPI || [http://www.macronix.com/QuickPlace/hq/PageLibrary4825740B00298A3B.nsf/h_Index/3F21BAC2E121E17848257639003A3146/$File/MX25L6406E,%203V,%2064Mb,%20v1.1.pdf here] || *YES* ||
 ||SN65LVDT41|| LVDS 4 drivers 1 reciver || [http://www.ti.com/lit/ds/symlink/sn65lvdt41-ep.pdf here] || *YES* ||
 || MCP23S17-E/SO || IC I/O EXPANDER SPI 16B 28SOIC || [http://ww1.microchip.com/downloads/en/DeviceDoc/21952b.pdf here] || *YES* ||
+|| D75A-020.0M ||  ||  || *YES* ||
+|| LM317EMP ||  ||  || *YES* ||
+|| MMZ1608S102A ||  ||  || *YES* ||
+|| RNS006 ||  ||  || *YES* ||
+|| TH_TESTPT ||  ||  || *YES* ||
+|| TPS3828_33 ||  ||  || *YES* ||
+|| XCF02S ||  ||  || *YES* ||
 ||N/A||CPCI brackets|| N/A || *YES* ||
 ||N/A||CPCI Backplate connector||N/A|| *YES* ||
 ||N/A||CPCI Wedge lock||N/A|| *YES* ||
-|| EPA.00.250.NTN || LEMO ||  || *YES*||
+|| EPA.00.250.NTN || LEMO connectors || n/a || *YES*||
+|| n/a || SMA connectors || n/a || *YES* ||
+||RJSAE-5381-08 || RJ45 connectors || n/a || *YES* ||
