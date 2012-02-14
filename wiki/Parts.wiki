@@ -19,8 +19,7 @@ This page will contain a list of parts, their descriptions, and associated datas
 || D75A-020.0M || OSC TCXO 20.000 MHZ 3.3V SMD || [http://www.conwin.com/datasheets/tx/tx236.pdf here] || *YES* ||
 || LM317EMP || IC REG POSITIVE ADJ SOT-223 || [http://www.ti.com/lit/ds/symlink/lm117.pdf here] || *YES* ||
 || MMZ1608S102A || FERRITE CHIP 1000 OHM 400MA 0603 || [http://www.tdk.co.jp/tefe02/e9412_mmz.pdf here] || *YES* ||
-|| RNS006 || resistor array ||  || *YES* ||
-|| TH_TESTPT ||  ||  || *YES* ||
+|| Y4100CT-ND || RES ARRAY 10 OHM 5% 4 RES SMD || [http://industrial.panasonic.com/www-cgi/jvcr13pz.cgi?E+PZ+3+AOC0001+EXBV8V100JV+7+WW here] || *YES* ||
 || TPS3828-33 || IC SUPERVISORY CIRCUIT  || [http://www.ti.com/lit/gpn/tps3828-33 here] || *YES* ||
 || XCF02S || IC PROM SRL FOR 2M GATE 20-TSSOP || [http://www.xilinx.com/support/documentation/data_sheets/ds123.pdf here] || *YES* ||
 || LM319M-ND || IC COMPARATOR DUAL HI SPD 14SOIC || [http://www.ti.com/lit/ds/symlink/lm119.pdf here] || *YES* ||
