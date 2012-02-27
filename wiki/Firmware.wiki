@@ -7,4 +7,7 @@ This page describes the firmware used to control the CAJIPCI board.
 
 = Details =
 
-DSPCPCI firmware is imported into trunk/firmware. See revision 1.
+DSPCPCI firmware is imported into trunk/firmware. See r2.
+
+
+Tested a simple CPCI test firmware with the current pin a assignment. All timing constraints were met. UCF file for the pci signals added. See r85.
