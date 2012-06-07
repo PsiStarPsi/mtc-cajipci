@@ -44,7 +44,6 @@ module SPI_Master(
 
 	//Clock generation
 	reg [2:0] clk_div_reg;
-	wire spi_clk_x2;
 	
 	initial begin
 		clk_div_reg = 3'b0;
