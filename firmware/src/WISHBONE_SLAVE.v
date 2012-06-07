@@ -37,9 +37,12 @@ module WISHBONE_SLAVE(
 	 //SPI_CTL
 	 input [31:0] SPI_I,
 	 output [31:0] SPI_O,
-	 input SPI_DONE_I,
+	 input 	SPI_DONE_I,
 	 output SPI_STAR_O,
-	 output [1:0] SPI_SEL_O
+	 output [1:0] SPI_SEL_O,
+	 //Trigger and ack
+	 input	[11:0] TRG_BITS_I,
+	 output	[11:0] ACK_BITS_O
     );
 
 	`define RECEIVER_FSM_BITS 2
@@ -64,13 +67,19 @@ module WISHBONE_SLAVE(
 
 	
 	//PCI registers
+	//SPI
 	reg [31:0] spi_o_reg;
 	reg spi_start;
 	reg [2:0] spi_sel_reg;
-	
+		
 	assign SPI_O=spi_o_reg;
 	assign SPI_SEL_O = spi_sel_reg;
 	assign SPI_STAR_O = spi_start;
+
+	//TRG and ACK
+	reg [11:0]	ack_bit_reg;
+
+	assign ACK_BITS_O = ack_bit_reg;
 	
 	always@(posedge clk_i) begin
 		if(reset_i)
@@ -129,9 +138,10 @@ module WISHBONE_SLAVE(
 	
 	always@(*) begin
 		case(adr_i_reg)
-		10'd0: dat_o_reg <= spi_o_reg;	//SPI_data_to_be_writen.
-		10'd1: dat_o_reg <= SPI_I;			//SPI data reg from the device
+		10'd0: dat_o_reg <= spi_o_reg;									//SPI_data_to_be_writen.
+		10'd1: dat_o_reg <= SPI_I;											//SPI data reg from the device
 		10'd2: dat_o_reg <= {spi_sel_reg, SPI_DONE_I,spi_start}; //SPI_control_register.
+		10'd3: dat_o_reg <={4'b0, TRG_BITS_I, 4'b0, ack_bit_reg};			//	Trg and Ack 
 		default: dat_o_reg <= 32'b0;
 		endcase
 	end
@@ -141,17 +151,17 @@ module WISHBONE_SLAVE(
 		if(reset_i)
 			 spi_o_reg<=32'b0;	
 		else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd0) begin
-								 if(sel_i_reg[0]==1'b1)   spi_o_reg[8*0+7:8*0]<=dat_i_reg[8*0+7:8*0];
-								 else   spi_o_reg[8*0+7:8*0]<=  spi_o_reg[8*0+7:8*0];
+								 if(sel_i_reg[0]==1'b1)   spi_o_reg[7:0]<=dat_i_reg[7:0];
+								 else   spi_o_reg[7:0]<=  spi_o_reg[7:0];
 									
-								 if(sel_i_reg[1]==1'b1)   spi_o_reg[8*1+7:8*1]<=dat_i_reg[8*1+7:8*1];
-								 else   spi_o_reg[8*1+7:8*1]<=  spi_o_reg[8*1+7:8*1];
+								 if(sel_i_reg[1]==1'b1)   spi_o_reg[15:8]<=dat_i_reg[15:8];
+								 else   spi_o_reg[15:8]<=  spi_o_reg[15:8];
 								 
-								 if(sel_i_reg[2]==1'b1)   spi_o_reg[8*2+7:8*2]<=dat_i_reg[8*2+7:8*2];
-								 else   spi_o_reg[8*2+7:8*2]<=  spi_o_reg[8*2+7:8*2];
+								 if(sel_i_reg[2]==1'b1)   spi_o_reg[23:16]<=dat_i_reg[23:16];
+								 else   spi_o_reg[23:16]<=  spi_o_reg[23:16];
 								 
-								 if(sel_i_reg[3]==1'b1)   spi_o_reg[8*3+7:8*3]<=dat_i_reg[8*3+7:8*3];
-								 else   spi_o_reg[8*3+7:8*3]<=  spi_o_reg[8*3+7:8*3];
+								 if(sel_i_reg[3]==1'b1)   spi_o_reg[31:24]<=dat_i_reg[31:24];
+								 else   spi_o_reg[31:24]<=  spi_o_reg[31:24];
 		end else
 			 spi_o_reg<= spi_o_reg;
 	end
@@ -176,6 +186,19 @@ module WISHBONE_SLAVE(
 			spi_start <= spi_start;
 			spi_sel_reg <= spi_sel_reg;
 		end
+	end
+
+	always@(posedge clk_i) begin
+		if(reset_i)
+			 ack_bit_reg<=12'b0;	
+		else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd3) begin
+								 if(sel_i_reg[0]==1'b1)   ack_bit_reg[7:0]<=dat_i_reg[7:0];
+								 else   ack_bit_reg[7:0] <=  ack_bit_reg[7:0];
+									
+								 if(sel_i_reg[1]==1'b1)   ack_bit_reg[11:8]<=dat_i_reg[11:8];
+								 else   ack_bit_reg[11:8]<=  ack_bit_reg[11:8];
+		end else
+			 ack_bit_reg<= ack_bit_reg;
 	end
 
 endmodule
