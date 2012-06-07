@@ -43,7 +43,11 @@ module cajipci_top(
 		input  SPI_MISO,			//Master input 
 		output SPI_MOSI,			//Master output
 		output SPI_SCLK,			//SPI clock
-		output [2:0] SPI_CLK_CS		//Chip_select lines for CDCE62005
+		output [2:0] SPI_CLK_CS,		//Chip_select lines for CDCE62005
+		
+		//CDCE CLOCKS
+		output RF_CLK3_N,
+		output RF_CLK3_P
     );
 	
 	//Wishbone Interconnect
@@ -97,7 +101,7 @@ PCI_TOP U_PCI_TOP (
     .PCI_PAR(PCI_PAR), 
     .PCI_PERR(PCI_PERR), 
     .PCI_SERR(PCI_SERR), 
-    .WB_CLK(PCI_CLK), 
+    .WB_CLK(BOARD_CLOCK), 
     .WB_RST(WB_RST), 
     .WB_INT(WB_INT), 
     .WBS_ADR_I(WBS_ADR_I), 
@@ -130,7 +134,7 @@ PCI_TOP U_PCI_TOP (
 
 //Wishbone slaves
 WISHBONE_SLAVE U_WISHBONE_SLAVE (
-    .clk_i(PCI_CLK), 
+    .clk_i(BOARD_CLOCK), 
     .reset_i(WB_RST), 
     .cyc_i(WBM_CYC_O), 
     .stb_i(WBM_STB_O), 
@@ -167,7 +171,7 @@ SPI_Master U_SPI_Master (
 
 // Instantiate the module
 WISHBONE_MASTER U_WISHBONE_MASTER (
-    .wb_clk_i(PCI_CLK), 
+    .wb_clk_i(BOARD_CLOCK), 
     .wb_rst_i(WB_RST), 
     .wbm_cyc_o(WBS_CYC_I), 
     .wbm_stb_o(WBS_STB_I), 
@@ -182,4 +186,12 @@ WISHBONE_MASTER U_WISHBONE_MASTER (
     .wbm_rty_i(WBS_RTY_O)
     );
 
+
+OBUFDS #(
+.IOSTANDARD("LVDS_25")
+) OBUFDS_CLK3 (
+.O(RF_CLK3_P),
+.OB(RF_CLK3_N),
+.I(BOARD_CLOCK)
+);
 endmodule

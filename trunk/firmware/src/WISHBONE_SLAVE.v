@@ -70,6 +70,7 @@ module WISHBONE_SLAVE(
 	
 	assign SPI_O=spi_o_reg;
 	assign SPI_SEL_O = spi_sel_reg;
+	assign SPI_STAR_O = spi_start;
 	
 	always@(posedge clk_i) begin
 		if(reset_i)
