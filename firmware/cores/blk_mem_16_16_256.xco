@@ -1,7 +1,7 @@
 ##############################################################
 #
-# Xilinx Core Generator version 13.2
-# Date: Tue Aug 30 23:17:54 2011
+# Xilinx Core Generator version 13.3
+# Date: Thu Jun  7 03:38:24 2012
 #
 ##############################################################
 #
@@ -22,16 +22,16 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = Verilog
-SET device = xc6slx45
-SET devicefamily = spartan6
+SET device = xc3s400
+SET devicefamily = spartan3
 SET flowvendor = Other
 SET formalverification = false
 SET foundationsym = false
 SET implementationfiletype = Ngc
-SET package = fgg484
+SET package = pq208
 SET removerpms = false
 SET simulationfiles = Behavioral
-SET speedgrade = -3
+SET speedgrade = -4
 SET verilogsim = true
 SET vhdlsim = false
 # END Project Options
@@ -99,7 +99,7 @@ CSET write_width_a=16
 CSET write_width_b=16
 # END Parameters
 # BEGIN Extra information
-MISC pkg_timestamp=2011-06-21T06:43:52.000Z
+MISC pkg_timestamp=2011-10-05T00:23:53.000Z
 # END Extra information
 GENERATE
-# CRC: eb440220
+# CRC: 3482de18

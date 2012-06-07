@@ -49,6 +49,7 @@ module WISHBONE_SLAVE(
 			REQ_BURST_RECEIVED=`RECEIVER_FSM_BITS'h2,
 			REQ_ERROR=`RECEIVER_FSM_BITS'h3;
 
+	reg ack_reg;
 	reg [31:0] dat_o_reg;
 	reg [31:0] dat_i_reg;
 	reg [9:0] adr_i_reg;
@@ -57,6 +58,10 @@ module WISHBONE_SLAVE(
 	reg we_i_reg;
 	reg [3:0] sel_i_reg;
 	assign dat_o=dat_o_reg;
+	assign ack_o=ack_reg;
+	assign err_o=(state==REQ_ERROR);
+	assign rty_o=1'b0;
+
 	
 	//PCI registers
 	reg [31:0] spi_o_reg;
@@ -113,6 +118,13 @@ module WISHBONE_SLAVE(
 			sel_i_reg<=4'b0;
 		end
 	end
+	
+	always@(posedge clk_i) begin
+		if(reset_i)
+			ack_reg<=1'b0;
+		else 
+			ack_reg<=(cyc_i & stb_i);
+	end	
 	
 	always@(*) begin
 		case(adr_i_reg)
