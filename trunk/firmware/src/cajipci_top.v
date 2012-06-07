@@ -47,7 +47,11 @@ module cajipci_top(
 		
 		//CDCE CLOCKS
 		output RF_CLK3_N,
-		output RF_CLK3_P
+		output RF_CLK3_P,
+		
+		//TRG and ACK
+		input [11:0] TRG,			//Trigger bits
+		output [11:0] ACK			//ACK bits
     );
 	
 	//Wishbone Interconnect
@@ -148,11 +152,15 @@ WISHBONE_SLAVE U_WISHBONE_SLAVE (
     .bte_i(WBM_BTE_O), 
     .we_i(WBM_WE_O), 
     .sel_i(WBM_SEL_O), 
+	 //SPI
     .SPI_I(SPI_I), 
     .SPI_O(SPI_O), 
     .SPI_DONE_I(SPI_DONE), 
     .SPI_STAR_O(SPI_STAR), 
-    .SPI_SEL_O(SPI_SEL)
+    .SPI_SEL_O(SPI_SEL),
+	 //TRG ACK
+	 .TRG_BITS_I(TRG), 
+    .ACK_BITS_O(ACK)
     );
 
 SPI_Master U_SPI_Master (
