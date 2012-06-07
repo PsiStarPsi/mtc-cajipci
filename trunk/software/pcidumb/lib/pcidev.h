@@ -24,8 +24,6 @@
 #include <linux/cred.h>
 #endif
 
-#include "settings.h"
-
 #if !defined(KOBJ_NAME_LEN)
 #define KOBJ_NAME_LEN 20
 #endif
@@ -38,16 +36,16 @@
 #define SA_INTERRUPT IRQF_DISABLED
 #endif
 
-#define BLAB_VEN_ID 0x10EE
-#define BLAB_DEV_ID 0x0002
+#define DUMB_VEN_ID 0x10EE
+#define DUMB_DEV_ID 0x0002
 
 
-extern int blab_init_pci(void);
-extern void blab_exit_pci(void);
+extern int dumb_init_pci(void);
+extern void dumb_exit_pci(void);
 
-int blab_readregion_pci(void* data,int offset, int len);
+int dumb_readregion_pci(void* data,int offset, int len);
 
-int blab_writeregion_pci(void* data,int offset, int len);
+int dumb_writeregion_pci(void* data,int offset, int len);
 
 int probe(struct pci_dev *dev, const struct pci_device_id *id);
 void remove(struct pci_dev *dev);

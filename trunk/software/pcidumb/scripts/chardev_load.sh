@@ -1,7 +1,7 @@
 #!/bin/sh
 # $Id: scull_load,v 1.4 2004/11/03 06:19:49 rubini Exp $
 module="chardev"
-device="barepci"
+device="pcidumb"
 mode="664"
 
 # Group: since distributions do it differently, look for wheel or use staff
@@ -13,8 +13,8 @@ fi
 
 # invoke insmod with all arguments we got
 # and use a pathname, as insmod doesn't look in . by default
-/sbin/rmmod barepci
-/sbin/insmod barepci.ko $* || exit 1
+/sbin/rmmod pcidumb
+/sbin/insmod pcidumb.ko $* || exit 1
 
 # retrieve major number
 major=$(awk -v MODULE=$module '$2==MODULE {print $1;}' /proc/devices)
