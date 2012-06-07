@@ -97,7 +97,7 @@ PCI_TOP U_PCI_TOP (
     .PCI_PAR(PCI_PAR), 
     .PCI_PERR(PCI_PERR), 
     .PCI_SERR(PCI_SERR), 
-    .WB_CLK(BOARD_CLOCK), 
+    .WB_CLK(PCI_CLK), 
     .WB_RST(WB_RST), 
     .WB_INT(WB_INT), 
     .WBS_ADR_I(WBS_ADR_I), 
@@ -130,7 +130,7 @@ PCI_TOP U_PCI_TOP (
 
 //Wishbone slaves
 WISHBONE_SLAVE U_WISHBONE_SLAVE (
-    .clk_i(BOARD_CLOCK), 
+    .clk_i(PCI_CLK), 
     .reset_i(WB_RST), 
     .cyc_i(WBM_CYC_O), 
     .stb_i(WBM_STB_O), 
@@ -153,7 +153,7 @@ WISHBONE_SLAVE U_WISHBONE_SLAVE (
 
 SPI_Master U_SPI_Master (
     .BOARD_CLOCK(BOARD_CLOCK), 
-    .RST(RST), 
+    .RST(WB_RST), 
     .SPI_MISO(SPI_MISO), 
     .SPI_MOSI(SPI_MOSI), 
     .SPI_CLK(SPI_SCLK), 
@@ -163,6 +163,23 @@ SPI_Master U_SPI_Master (
     .SPI_DONE_O(SPI_DONE), 
     .SPI_STAR_I(SPI_STAR), 
     .SPI_SEL_I(SPI_SEL)
+    );
+
+// Instantiate the module
+WISHBONE_MASTER U_WISHBONE_MASTER (
+    .wb_clk_i(PCI_CLK), 
+    .wb_rst_i(WB_RST), 
+    .wbm_cyc_o(WBS_CYC_I), 
+    .wbm_stb_o(WBS_STB_I), 
+    .wbm_sel_o(WBS_SEL_I), 
+    .wbm_we_o(WBS_WE_I), 
+    .wbm_adr_o(WBS_ADR_I), 
+    .wbm_dat_o(WBS_DAT_I), 
+    .wbm_cab_o(WBS_CAB_I), 
+    .wbm_dat_i(WBS_DAT_O), 
+    .wbm_ack_i(WBS_ACK_O), 
+    .wbm_err_i(WBS_ERR_O), 
+    .wbm_rty_i(WBS_RTY_O)
     );
 
 endmodule
