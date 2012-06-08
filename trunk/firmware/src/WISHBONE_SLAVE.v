@@ -42,7 +42,9 @@ module WISHBONE_SLAVE(
 	 output [1:0] SPI_SEL_O,
 	 //Trigger and ack
 	 input	[11:0] TRG_BITS_I,
-	 output	[11:0] ACK_BITS_O
+	 output	[11:0] ACK_BITS_O,
+	 //JTAG Controlls
+	 output [3:0] JTAG_SEL_O
     );
 
 	`define RECEIVER_FSM_BITS 2
@@ -80,6 +82,12 @@ module WISHBONE_SLAVE(
 	reg [11:0]	ack_bit_reg;
 
 	assign ACK_BITS_O = ack_bit_reg;
+	
+	//JTAG select
+	reg [3:0] jtag_sel_reg;
+	
+	assign JTAG_SEL_O = jtag_sel_reg;
+	
 	
 	always@(posedge clk_i) begin
 		if(reset_i)
@@ -142,6 +150,7 @@ module WISHBONE_SLAVE(
 		10'd1: dat_o_reg <= SPI_I;											//SPI data reg from the device
 		10'd2: dat_o_reg <= {spi_sel_reg, SPI_DONE_I,spi_start}; //SPI_control_register.
 		10'd3: dat_o_reg <={4'b0, TRG_BITS_I, 4'b0, ack_bit_reg};			//	Trg and Ack 
+		10'd4: dat_o_reg <= {jtag_sel_reg};
 		default: dat_o_reg <= 32'b0;
 		endcase
 	end
@@ -200,5 +209,16 @@ module WISHBONE_SLAVE(
 		end else
 			 ack_bit_reg<= ack_bit_reg;
 	end
+
+	always@(posedge clk_i) begin
+		if(reset_i)
+			 jtag_sel_reg<=4'b0;	
+		else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd4) begin
+								 if(sel_i_reg[0]==1'b1)   jtag_sel_reg[3:0]<=dat_i_reg[3:0];
+								 else   jtag_sel_reg[3:0] <=  jtag_sel_reg[3:0];
+		end else
+			 jtag_sel_reg <= jtag_sel_reg;
+	end
+
 
 endmodule
