@@ -45,6 +45,8 @@ module cajipci_top(
 		output SPI_SCLK,			//SPI clock
 		output [2:0] SPI_CLK_CS,		//Chip_select lines for CDCE62005
 		
+		output [2:0] CLK_SYNC,			//SYNC for the clock.
+		
 		//CDCE CLOCKS
 		output RF_CLK3_N,
 		output RF_CLK3_P,
@@ -181,6 +183,7 @@ WISHBONE_SLAVE U_WISHBONE_SLAVE (
     .SPI_DONE_I(SPI_DONE), 
     .SPI_STAR_O(SPI_STAR), 
     .SPI_SEL_O(SPI_SEL),
+	 .CLK_SYNC_O(CLK_SYNC),
 	 //TRG ACK
 	 .TRG_BITS_I(ACK), 
     .ACK_BITS_O(TRG),

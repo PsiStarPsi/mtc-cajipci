@@ -40,6 +40,7 @@ module WISHBONE_SLAVE(
 	 input 	SPI_DONE_I,
 	 output SPI_STAR_O,
 	 output [1:0] SPI_SEL_O,
+	 output [2:0] CLK_SYNC_O,
 	 //Trigger and ack
 	 input	[11:0] TRG_BITS_I,
 	 output	[11:0] ACK_BITS_O,
@@ -73,10 +74,15 @@ module WISHBONE_SLAVE(
 	reg [31:0] spi_o_reg;
 	reg spi_start;
 	reg [2:0] spi_sel_reg;
-		
+	reg clk_sync_reg;
+	
 	assign SPI_O=spi_o_reg;
 	assign SPI_SEL_O = spi_sel_reg;
 	assign SPI_STAR_O = spi_start;
+	assign CLK_SYNC_O[0] = clk_sync_reg;
+	assign CLK_SYNC_O[1] = clk_sync_reg;
+	assign CLK_SYNC_O[2] = clk_sync_reg;
+
 
 	//TRG and ACK
 	reg [11:0]	ack_bit_reg;
@@ -148,7 +154,7 @@ module WISHBONE_SLAVE(
 		case(adr_i_reg)
 		10'd0: dat_o_reg <= spi_o_reg;									//SPI_data_to_be_writen.
 		10'd1: dat_o_reg <= SPI_I;											//SPI data reg from the device
-		10'd2: dat_o_reg <= {spi_sel_reg, SPI_DONE_I,spi_start}; //SPI_control_register.
+		10'd2: dat_o_reg <= {clk_sync_reg, spi_sel_reg, SPI_DONE_I,spi_start}; //SPI_control_register.
 		10'd3: dat_o_reg <={4'b0, TRG_BITS_I, 4'b0, ack_bit_reg};			//	Trg and Ack 
 		10'd4: dat_o_reg <= {jtag_sel_reg};
 		default: dat_o_reg <= 32'b0;
@@ -175,16 +181,21 @@ module WISHBONE_SLAVE(
 			 spi_o_reg<= spi_o_reg;
 	end
 
+	reg [2:0] clk_sync_counter;
+
 	always@(posedge clk_i) begin
 		if(reset_i)
 		begin
 			spi_sel_reg <= 2'b0;
 			spi_start <= 2'b0;
+			clk_sync_reg <=1'b1;
+			clk_sync_counter <= 3'b0;
 		end
 		else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd2) begin
 			if(sel_i_reg[0]==1'b1) begin
 				spi_start <= dat_i_reg[0];
 				spi_sel_reg <=dat_i_reg[3:2];
+				clk_sync_reg <= 1;
 			end
 			else  begin
 				spi_start <= spi_start;
@@ -194,6 +205,14 @@ module WISHBONE_SLAVE(
 		else begin
 			spi_start <= spi_start;
 			spi_sel_reg <= spi_sel_reg;
+		end
+		
+		if(clk_sync_reg == 1'b0) begin
+			clk_sync_counter <= clk_sync_counter + 1;
+			if(clk_sync_counter == 3'b111) begin
+				clk_sync_counter <= 3'b0;
+				clk_sync_reg <= 1'b1;
+			end
 		end
 	end
 
