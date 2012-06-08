@@ -36,7 +36,7 @@ module JTAG_MUX(
 	generate
 	genvar JTAGIt;
 	for (JTAGIt=0;JTAGIt<12;JTAGIt=JTAGIt+1) begin : JTAG_LOOP
-		assign TDI[JTAGIt] = (JTAG_SEL == JTAGIt) ? V_TMS : 0;
+		assign TDI[JTAGIt] = (JTAG_SEL == JTAGIt) ? V_TDI : 0;
 		assign V_TDO = (JTAG_SEL < 'd12) ? TDO[JTAG_SEL] : 0;
 	end
 	endgenerate
