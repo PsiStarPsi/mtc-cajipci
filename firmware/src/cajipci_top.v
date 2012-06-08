@@ -50,8 +50,25 @@ module cajipci_top(
 		output RF_CLK3_P,
 		
 		//TRG and ACK
-		input [11:0] TRG,			//Trigger bits
-		output [11:0] ACK			//ACK bits
+		output [11:0] TRG,			//Trigger bits
+		input [11:0] ACK,			//ACK bits
+		
+		//JTAG
+		
+		output TMS,
+		output TMS_EN,
+		output TCK,
+		output TCK_EN,
+
+		input [11:0] TDO,
+		output [11:0] TDI,
+		
+		//Virtual Jtag
+		
+		input V_TDI,
+		output V_TDO,
+		input V_TMS,
+		input V_TCK
     );
 	
 	//Wishbone Interconnect
@@ -87,6 +104,12 @@ module cajipci_top(
    wire 			SPI_DONE; 
    wire 			SPI_STAR;
    wire [1:0]	SPI_SEL;
+	
+	//JTAG INTERCONNECT
+	wire [3:0] JTAG_SEL;
+	//TMS and TCK multiplexer enable
+	assign TMS_EN = 1;
+	assign TCK_EN = 1;
 	
 PCI_TOP U_PCI_TOP (
     .PCI_CLK(PCI_CLK), 
@@ -159,8 +182,10 @@ WISHBONE_SLAVE U_WISHBONE_SLAVE (
     .SPI_STAR_O(SPI_STAR), 
     .SPI_SEL_O(SPI_SEL),
 	 //TRG ACK
-	 .TRG_BITS_I(TRG), 
-    .ACK_BITS_O(ACK)
+	 .TRG_BITS_I(ACK), 
+    .ACK_BITS_O(TRG),
+	 //JTAG
+	 .JTAG_SEL_O(JTAG_SEL)
     );
 
 SPI_Master U_SPI_Master (
@@ -194,6 +219,17 @@ WISHBONE_MASTER U_WISHBONE_MASTER (
     .wbm_rty_i(WBS_RTY_O)
     );
 
+JTAG_MUX U_JTAG_MUX (
+    .TDO(TDO), 
+    .TDI(TDI), 
+    .TMS(TMS), 
+    .TCK(TCK), 
+    .JTAG_SEL(JTAG_SEL), 
+    .V_TDI(V_TDI), 
+    .V_TDO(V_TDO), 
+    .V_TMS(V_TMS), 
+    .V_TCK(V_TCK)
+    );
 
 OBUFDS #(
 .IOSTANDARD("LVDS_25")
