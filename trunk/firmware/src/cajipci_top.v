@@ -241,4 +241,10 @@ OBUFDS #(
 .OB(RF_CLK3_N),
 .I(BOARD_CLOCK)
 );
+
+DEBUG U_DEBUG (
+    .trg({TDI[0],TDO[0],TCK,TMS, V_TDI, V_TDO, V_TMS, V_TCK}), 
+    .clk(BOARD_CLOCK)
+    );
+
 endmodule
