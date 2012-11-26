@@ -1,7 +1,7 @@
 ##############################################################
 #
-# Xilinx Core Generator version 13.3
-# Date: Wed Jun 13 01:44:42 2012
+# Xilinx Core Generator version 14.1
+# Date: Thu Nov 15 23:44:26 2012
 #
 ##############################################################
 #
@@ -134,5 +134,8 @@ CSET trigger_port_width_8=8
 CSET trigger_port_width_9=8
 CSET use_rpms=true
 # END Parameters
+# BEGIN Extra information
+MISC pkg_timestamp=2012-04-24T01:42:16Z
+# END Extra information
 GENERATE
-# CRC: ae7c29a6
+# CRC: 88dd53ff
