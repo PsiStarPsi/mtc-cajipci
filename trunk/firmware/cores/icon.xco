@@ -1,7 +1,7 @@
 ##############################################################
 #
-# Xilinx Core Generator version 13.3
-# Date: Wed Jun 13 01:42:29 2012
+# Xilinx Core Generator version 14.1
+# Date: Thu Nov 15 23:43:17 2012
 #
 ##############################################################
 #
@@ -49,5 +49,8 @@ CSET use_softbscan=false
 CSET use_unused_bscan=false
 CSET user_scan_chain=USER1
 # END Parameters
+# BEGIN Extra information
+MISC pkg_timestamp=2012-04-24T01:41:49Z
+# END Extra information
 GENERATE
-# CRC:   852726
+# CRC: 16f001e1
