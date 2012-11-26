@@ -38,9 +38,9 @@ module SPI_Master(
 	`define SPI_FSM_BITS 2
 	reg [`SPI_FSM_BITS-1:0] state;
 	parameter	READY=`SPI_FSM_BITS'h0,
-			IDLE=`SPI_FSM_BITS'h1,
-			SEND=`SPI_FSM_BITS'h2,
-			SEND_RECIEVE=`SPI_FSM_BITS'h3;
+					IDLE=`SPI_FSM_BITS'h1,
+					SEND=`SPI_FSM_BITS'h2,
+					SEND_RECIEVE=`SPI_FSM_BITS'h3;
 
 	//Clock generation
 	reg [2:0] clk_div_reg;
@@ -55,7 +55,7 @@ module SPI_Master(
 	end
 
 	assign spi_clk_int = clk_div_reg[2];	
-	assign SPI_CLK = (state == READY) ? 0 : spi_clk_int;
+	assign SPI_CLK = (SPI_CSS == 3'b111) ? 0 : spi_clk_int;
 	
 	//CHIP Select logic
 	
@@ -69,7 +69,7 @@ module SPI_Master(
 	end
 	endgenerate
 	
-	always @(posedge spi_clk_int) begin
+	always @(negedge spi_clk_int) begin
 		if(RST)
 			spi_sel_reg <= 0;
 		else if(state == READY)
@@ -92,17 +92,19 @@ module SPI_Master(
 		mosi_reg <= 0;
 	end
 	
-	always @(posedge spi_clk_int) begin
+	
+	always @(negedge spi_clk_int) begin
 		if(state == READY) begin
 			spi_i_reg = SPI_I;
 		end
-		else if(state == SEND) begin
+		else if(state == SEND || state == SEND_RECIEVE) begin
 			mosi_reg = spi_i_reg[0];
 			spi_i_reg = spi_i_reg >> 1;
 		end
-		else if(state == SEND_RECIEVE) begin
-			mosi_reg = spi_i_reg[0];
-			spi_i_reg = spi_i_reg >> 1;
+	end
+	
+	always @(posedge spi_clk_int) begin
+		if(state == SEND_RECIEVE) begin
 			spi_o_reg = spi_o_reg >> 1;
 			spi_o_reg[31] = SPI_MISO;	
 		end
@@ -121,7 +123,7 @@ module SPI_Master(
 		spi_cs = 1;
 	end
 	
-	always @(posedge spi_clk_int) begin
+	always @(negedge spi_clk_int) begin
 		if(RST) begin
 			state <= READY;
 			spi_done_reg <= 1;
