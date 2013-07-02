@@ -30,7 +30,7 @@ module SPI_Master(
 	output [31:0] SPI_O,
 	input [31:0] SPI_I,
 	output SPI_DONE_O,
-	input SPI_STAR_I,
+	input SPI_START_I,
 	input [1:0] SPI_SEL_I
    );
 
@@ -136,7 +136,7 @@ module SPI_Master(
 					spi_cs <= 1;
 					spi_state_counter <= 8'b0;
 					spi_done_reg <= 0;
-					if(SPI_STAR_I) begin
+					if(SPI_START_I) begin
 						if(SPI_I[3:0] == 4'b1110)
 							state <= SEND_RECIEVE;
 						else
@@ -147,7 +147,7 @@ module SPI_Master(
 					spi_cs <= 1;
 					spi_done_reg <= 1;
 					spi_state_counter <= 8'b0;
-					if(SPI_STAR_I == 0) begin
+					if(SPI_START_I == 0) begin
 						state <= READY;
 					end
 				end
