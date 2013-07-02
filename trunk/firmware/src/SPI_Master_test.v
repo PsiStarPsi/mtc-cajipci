@@ -50,7 +50,7 @@ module SPI_Master_test;
 		.SPI_O(SPI_O), 
 		.SPI_I(SPI_I), 
 		.SPI_DONE_O(SPI_DONE_O), 
-		.SPI_STAR_I(SPI_STAR_I), 
+		.SPI_START_I(SPI_STAR_I), 
 		.SPI_SEL_I(SPI_SEL_I)
 	);
 
