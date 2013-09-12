@@ -33,8 +33,8 @@ struct dumb_chardev
 	struct cdev cdev;
 	//Character device data, this should be connected to the DMA buffer
 	void * data;
-  void * buffer;  // read buffer
-  int buffersize;
+  	void * buffer;  // read buffer
+  	int buffersize;
 	int size;
 	int pos;
 };
