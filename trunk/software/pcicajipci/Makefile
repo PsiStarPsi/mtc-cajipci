@@ -1,5 +1,5 @@
-obj-m += pcidumb.o
-pcidumb-objs := dumbpci.o chardev.o pcidev.o
+obj-m += cajipci.o
+cajipci-objs := cajipci.o chardev.o pcidev.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

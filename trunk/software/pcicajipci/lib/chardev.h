@@ -1,5 +1,5 @@
-#ifndef _DUMB_CHAR_DEV
-#define _DUMB_CHAR_DEV
+#ifndef _cajipci_CHAR_DEV
+#define _cajipci_CHAR_DEV
 #include <linux/kernel.h> /* printk() */
 #include <linux/module.h>
 #include <linux/slab.h>   /* kmalloc() */
@@ -11,7 +11,6 @@
 #include <linux/tty.h>
 #include <asm/atomic.h>
 #include <linux/list.h>
-#include <asm/system.h>
 #include <asm/uaccess.h>
 #include <linux/version.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26)
@@ -20,13 +19,13 @@
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)
 #include <linux/cred.h>
 #endif
-#define DUMB_BUFF_SIZE  4096	//Buffer size
+#define cajipci_BUFF_SIZE  4096	//Buffer size
 
 /*
 *	Data structures
 */
 
-struct dumb_chardev
+struct cajipci_chardev
 {
 	// set on device open, only one proccess can have it open at a time.
 	struct semaphore * open_sem;
@@ -44,15 +43,15 @@ struct dumb_chardev
 */
 
 //Initialization and Exit
-extern int dumb_init_chardev(void);
-extern void dumb_exit_chardev(void);
+extern int cajipci_init_chardev(void);
+extern void cajipci_exit_chardev(void);
 
 //File operations
-loff_t dumb_chardev_lseek(struct file *file, loff_t offset, int orig);
-int dumb_chardev_open(struct inode *inode,struct file *filep);
-int dumb_chardev_release(struct inode *inode,struct file *filep);
-ssize_t dumb_chardev_read(struct file *filep,char *buff,size_t count,loff_t *offp );
-ssize_t dumb_chardev_write(struct file *filep,const char *buff,size_t count,loff_t *offp );
-ssize_t dumb_chardev_buffered_read(struct file *filep,char *buff,size_t count,loff_t *offp );
-ssize_t dumb_chardev_buffered_write(struct file *filep,const char *buff,size_t count,loff_t *offp );
+loff_t cajipci_chardev_lseek(struct file *file, loff_t offset, int orig);
+int cajipci_chardev_open(struct inode *inode,struct file *filep);
+int cajipci_chardev_release(struct inode *inode,struct file *filep);
+ssize_t cajipci_chardev_read(struct file *filep,char *buff,size_t count,loff_t *offp );
+ssize_t cajipci_chardev_write(struct file *filep,const char *buff,size_t count,loff_t *offp );
+ssize_t cajipci_chardev_buffered_read(struct file *filep,char *buff,size_t count,loff_t *offp );
+ssize_t cajipci_chardev_buffered_write(struct file *filep,const char *buff,size_t count,loff_t *offp );
 #endif	/*chardev.h*/

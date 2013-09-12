@@ -11,7 +11,6 @@
 #include <asm/atomic.h>
 #include <linux/list.h>
 #include <asm/io.h>
-#include <asm/system.h>
 #include <asm/uaccess.h>
 #include <asm/msr.h>
 #include <linux/version.h>
@@ -36,16 +35,16 @@
 #define SA_INTERRUPT IRQF_DISABLED
 #endif
 
-#define DUMB_VEN_ID 0x10EE
-#define DUMB_DEV_ID 0x0002
+#define cajipci_VEN_ID 0x10EE
+#define cajipci_DEV_ID 0x0002
 
 
-extern int dumb_init_pci(void);
-extern void dumb_exit_pci(void);
+extern int cajipci_init_pci(void);
+extern void cajipci_exit_pci(void);
 
-int dumb_readregion_pci(void* data,int offset, int len);
+int cajipci_readregion_pci(void* data,int offset, int len);
 
-int dumb_writeregion_pci(void* data,int offset, int len);
+int cajipci_writeregion_pci(void* data,int offset, int len);
 
 int probe(struct pci_dev *dev, const struct pci_device_id *id);
 void remove(struct pci_dev *dev);
