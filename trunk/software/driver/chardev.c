@@ -8,7 +8,6 @@ struct file_operations cajipci_chardev_fops;
 
 int cajipci_chardev_major=-1;
 
-
 #define READBUFFERSIZE 4096
 
 int cajipci_init_chardev()
@@ -28,7 +27,7 @@ int cajipci_init_chardev()
 	cajipci_chardev_fops.write = cajipci_chardev_write;
 	cajipci_chardev_fops.release = cajipci_chardev_release;
 	cajipci_chardev_fops.llseek = cajipci_chardev_lseek;
-	if(alloc_chrdev_region (&tmpchrdev,0,1,"chardev")<0)
+	if(alloc_chrdev_region (&tmpchrdev,0,1,"cajipci_chardev")<0)
 	{
 		printk("cajipci CPCI Driver: couldnt get major/minor number.\n");
 		return -1;

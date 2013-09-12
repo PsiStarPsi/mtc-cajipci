@@ -16,7 +16,7 @@
 
 #define REG_NUM 8
 
-#define DRV_NAME "/dev/pcidumb0"
+#define DRV_NAME "/dev/cajipci0"
 
 int reg[REG_NUM] = {0, 
 0,
