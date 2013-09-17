@@ -228,7 +228,7 @@ wire WB_INT;
 	
 //PCI Controll
 WISHBONE_SLAVE U_WISHBONE_SLAVE (
-	.clk_i(PCI_CLK),
+	.clk_i(CLK_80MHZ),
 	.reset_i(WB_RST),
 	.cyc_i(WBM_CYC_O),
 	.stb_i(WBM_STB_O),
@@ -308,7 +308,7 @@ PCI_TOP U_PCI_TOP (
 	);
 //Wishbone master (blank)
 WISHBONE_MASTER U_WISHBONE_MASTER (
-.wb_clk_i(PCI_CLK),
+.wb_clk_i(CLK_80MHZ),
 .wb_rst_i(WB_RST),
 .wbm_cyc_o(WBS_CYC_I),
 .wbm_stb_o(WBS_STB_I),
