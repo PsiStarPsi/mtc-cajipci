@@ -294,6 +294,10 @@
       <association xil_pn:name="BehavioralSimulation"/>
       <association xil_pn:name="Implementation"/>
     </file>
+    <file xil_pn:name="cores/CLOCK_GEN_PCI.xaw" xil_pn:type="FILE_XAW">
+      <association xil_pn:name="BehavioralSimulation"/>
+      <association xil_pn:name="Implementation"/>
+    </file>
     <file xil_pn:name="cores/vio.xise" xil_pn:type="FILE_ISE">
       <association xil_pn:name="Implementation"/>
     </file>
