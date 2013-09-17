@@ -78,6 +78,7 @@ module cajipci_top(
 wire CLK_80MHZ;
 wire CLK_20MHZ;
 wire CLK_1MHZ;
+wire CLK_66MHZ;
 
 OBUFDS #(
 	.IOSTANDARD("LVDS_25")
@@ -110,6 +111,8 @@ CLOCKS u_clocks (
 		.CLK_80MHZ(CLK_80MHZ), 
 		.CLK_20MHZ(CLK_20MHZ), 
 		.CLK_1MHZ(CLK_1MHZ), 
+		.PCI_CLK(PCI_CLK), 
+		.CLK_66MHZ(CLK_66MHZ), 
 		.LOCKED(LOCKED)
 		);
 
@@ -228,7 +231,7 @@ wire WB_INT;
 	
 //PCI Controll
 WISHBONE_SLAVE U_WISHBONE_SLAVE (
-	.clk_i(CLK_80MHZ),
+	.clk_i(CLK_66MHZ),
 	.reset_i(WB_RST),
 	.cyc_i(WBM_CYC_O),
 	.stb_i(WBM_STB_O),
@@ -276,7 +279,7 @@ PCI_TOP U_PCI_TOP (
 	.PCI_PAR(PCI_PAR),
 	.PCI_PERR(PCI_PERR),
 	.PCI_SERR(PCI_SERR),
-	.WB_CLK(CLK_80MHZ),
+	.WB_CLK(CLK_66MHZ),
 	.WB_RST(WB_RST),
 	.WB_INT(WB_INT),
 	.WBS_ADR_I(WBS_ADR_I),
@@ -308,7 +311,7 @@ PCI_TOP U_PCI_TOP (
 	);
 //Wishbone master (blank)
 WISHBONE_MASTER U_WISHBONE_MASTER (
-.wb_clk_i(CLK_80MHZ),
+.wb_clk_i(CLK_66MHZ),
 .wb_rst_i(WB_RST),
 .wbm_cyc_o(WBS_CYC_I),
 .wbm_stb_o(WBS_STB_I),
