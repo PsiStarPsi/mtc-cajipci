@@ -183,23 +183,15 @@ TRIG U_TRG(
 
 //Debug
 wire [35:0] CONTROL0;
-wire [35:0] CONTROL1;
 
 icon u_icon (
-    .CONTROL0(CONTROL0), // INOUT BUS [35:0]
-    .CONTROL1(CONTROL1) // INOUT BUS [35:0]
+    .CONTROL0(CONTROL0) // INOUT BUS [35:0]
 );
 
 ila u_ila1 (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
     .CLK(CLK_80MHZ), // IN
-    .TRIG0(ACK[7:0]) // IN BUS [7:0]
-);
-
-ila u_ila2 (
-    .CONTROL(CONTROL1), // INOUT BUS [35:0]
-    .CLK(CLK_80MHZ), // IN
-    .TRIG0({ACK[11:8], TRG[0]}) // IN BUS [7:0]
+    .TRIG0({ACK, TRG, TRG_SOFT}) // IN BUS [7:0]
 );
 
 //Wishbone Interconnect

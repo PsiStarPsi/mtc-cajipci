@@ -224,10 +224,10 @@ end
 always@(posedge clk_i) begin
 	if(reset_i) begin
 		trg_mask_reg <= 'hFFF;
-		min_scrod_required_reg <= 7;
+		min_scrod_required_reg <= 12;
 		trg_soft_reg <= 0;
 	end
-	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd0) begin
+	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd4) begin
 		if(sel_i_reg[0]==1'b1) 
 			trg_mask_reg[7:0] <= dat_i_reg[7:0];
 		else 
@@ -241,14 +241,16 @@ always@(posedge clk_i) begin
 			trg_mask_reg[11:8] <= trg_mask_reg[11:8];
 			min_scrod_required_reg[3:0] <= min_scrod_required_reg[3:0];
 		end
+		
 		if(sel_i_reg[2]==1'b1) 
 			trg_soft_reg<=dat_i_reg[16];
 		else 
 			trg_soft_reg<= trg_soft_reg;
-	end else
+	end else begin
 		trg_mask_reg <= trg_mask_reg;
 		min_scrod_required_reg <= min_scrod_required_reg;
 		trg_soft_reg <= trg_soft_reg;
+	end
 end
 
 endmodule
