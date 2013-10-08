@@ -14,18 +14,30 @@
 #define SPI_SEL   2
 #define SPI_SYNC  4
 
-#define REG_NUM 8
+#define REG_NUM 18
 
 #define DRV_NAME "/dev/cajipci0"
 
-int reg[REG_NUM] = {0, 
-0,
-0,
-0,
-0,
-0,
-0,
-0xF1E2C3B4};
+int reg[REG_NUM] = { 
+	0xEB340320,
+	0xEB340301,
+	0xEB340302,
+	0xEB340303,
+	0x68860314,
+	0x10000A65,
+	0x04CE0C76,
+	0xBD887AA7,
+	0x80001808,
+	0x0E,
+	0x1E,
+	0x2E,
+	0x3E,
+	0x4E,
+	0x5E,
+	0x6E,
+	0x7E,
+	0x8E
+};
 
 using namespace std;
 
@@ -45,12 +57,19 @@ int main()
 		data = reg[i];
 		lseek(fd, SEEK_SEND, SEEK_SET);
 		write(fd, &data, sizeof(int));
+
 	        lseek(fd, SEEK_CTL, SEEK_SET);
 		read(fd, &data, sizeof(int));
-		data &= ~(~3 << SPI_SEL);
+		data &= (0 << SPI_SEL);
+
                 lseek(fd, SEEK_CTL, SEEK_SET);
-		data |= 1 << SPI_START;
+		data &= ~(1 << SPI_START);
                 write(fd, &data, sizeof(int));
+	
+		lseek(fd, SEEK_CTL, SEEK_SET);
+		data |= 1 << SPI_START;
+		write(fd, &data, sizeof(int)); 
+		
 		usleep(100);
 		lseek(fd, SEEK_RCV, SEEK_SET);
 		read(fd, &data, sizeof(int));
@@ -59,6 +78,10 @@ int main()
 	int data = 1 << SPI_SYNC;
 	printf("Syncing...\n");
         lseek(fd, SEEK_CTL, SEEK_SET);
+	write(fd, &data, sizeof(int));
+	usleep(100);
+	data = 0;
+	lseek(fd, SEEK_CTL, SEEK_SET);
 	write(fd, &data, sizeof(int));
 	close(fd);
 }
