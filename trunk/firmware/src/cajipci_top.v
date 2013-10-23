@@ -72,7 +72,12 @@ module cajipci_top(
 		input V_TDI,
 		output V_TDO,
 		input V_TMS,
-		input V_TCK
+		input V_TCK,
+		
+		//LED
+		output LED_CLK, 
+		output LED_OE, 
+		output LED_OUT
     );
 	 
 wire CLK_80MHZ;
@@ -152,7 +157,7 @@ wire [3:0] JTAG_MUX_SEL;
 assign TMS_EN = 1;
 assign TCK_EN = 1;
 
-JTAG_MUX U_JTAG_MUX (
+JTAG_MUX u_jtag_mux (
 	.TDO(TDO),
 	.TDI(TDI),
 	.TMS(TMS),
@@ -170,7 +175,7 @@ wire [3:0] MIN_SCRODS_REQUIRED;
 wire [31:0] TRG_STATISTICS;
 wire TRG_SOFT;
 
-TRIG U_TRG(
+TRIG u_trg(
     .CLK_80MHZ(CLK_80MHZ),
 	 .RESET(0),
     .TRG(TRG), 
@@ -179,6 +184,16 @@ TRIG U_TRG(
     .MIN_SCRODS_REQUIRED(MIN_SCRODS_REQUIRED), 
     .TRG_STATISTICS(TRG_STATISTICS),
 	 .TRG_SOFT(TRG_SOFT)
+    );
+
+//LEDS
+LED u_led (
+    .TRG_MASK(TRG_MASK), 
+    .JTAG_MUX(JTAG_MUX_SEL), 
+    .CLK_1MHZ(CLK_1MHZ), 
+    .LED_CLK(LED_CLK), 
+    .LED_OE(LED_OE), 
+    .LED_OUT(LED_OUT)
     );
 
 //Debug
@@ -222,7 +237,7 @@ wire WBS_WE_I;
 wire WB_INT;
 	
 //PCI Controll
-WISHBONE_SLAVE U_WISHBONE_SLAVE (
+WISHBONE_SLAVE u_wishbone_slave (
 	.clk_i(CLK_66MHZ),
 	.reset_i(WB_RST),
 	.cyc_i(WBM_CYC_O),
@@ -254,7 +269,7 @@ WISHBONE_SLAVE U_WISHBONE_SLAVE (
 	);
 
 //PCI MASTER
-PCI_TOP U_PCI_TOP (
+PCI_TOP u_pci_top (
 	.PCI_CLK(PCI_CLK),
 	.PCI_RST(PCI_RST),
 	.PCI_INTA(PCI_INTA),
@@ -302,7 +317,7 @@ PCI_TOP U_PCI_TOP (
 	.WBM_ERR_I(WBM_ERR_I)
 	);
 //Wishbone master (blank)
-WISHBONE_MASTER U_WISHBONE_MASTER (
+WISHBONE_MASTER u_wishbone_master (
 .wb_clk_i(CLK_66MHZ),
 .wb_rst_i(WB_RST),
 .wbm_cyc_o(WBS_CYC_I),
