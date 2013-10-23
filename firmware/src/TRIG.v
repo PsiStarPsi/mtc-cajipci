@@ -34,12 +34,15 @@ reg [3:0] current_triggers;
 reg [11:0] trg_reg;
 assign TRG = trg_reg;
 
-reg trg_statistics_reg;
+reg [31:0] trg_statistics_reg;
 assign TRG_STATISTICS = trg_statistics_reg;
+
+reg [1:0] trg_delay;
 
 initial begin
 	trg_statistics_reg = 0;
 	trg_reg = 0;
+	trg_delay = 3;
 end
 
 reg soft_trig_pos_edge;
@@ -90,15 +93,24 @@ end
 always @(posedge CLK_80MHZ) begin
 	if(RESET) begin
 		trg_statistics_reg = 0;
+		trg_delay = 3;
 		trg_reg = 0;
 	end
 	else begin
 		if(current_triggers >= MIN_SCRODS_REQUIRED || soft_trig_pos_edge == 1) begin
 			trg_reg = 'hFFF;
+			trg_delay = 0;
 			trg_statistics_reg = trg_statistics_reg + 32'b1;
 		end
-		else 
-			trg_reg = 0;
+		else begin
+			if( trg_delay != 3) begin
+				trg_delay = trg_delay +1;
+				trg_reg = 'hFFF;
+			end
+			else begin
+				trg_reg = 'h000;
+			end
+		end
 	end
 end
 

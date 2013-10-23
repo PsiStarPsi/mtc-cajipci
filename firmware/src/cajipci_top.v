@@ -196,7 +196,9 @@ LED u_led (
     .LED_OUT(LED_OUT)
     );
 
+
 //Debug
+/*
 wire [35:0] CONTROL0;
 
 icon u_icon (
@@ -208,7 +210,7 @@ ila u_ila1 (
     .CLK(CLK_80MHZ), // IN
     .TRIG0({ACK, TRG, TRG_SOFT}) // IN BUS [7:0]
 );
-
+*/
 //Wishbone Interconnect
 wire WBM_ACK_I;
 wire [31:0] WBM_ADR_O;
