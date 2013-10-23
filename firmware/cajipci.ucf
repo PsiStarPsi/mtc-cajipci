@@ -1,7 +1,7 @@
 ########################### Led Shift Register ###################################
-#NET "LED_OE" LOC = P191;
-#NET "LED_CLK" LOC = P205;
-#NET "LED_OUT" LOC = P76;
+NET "LED_OE" LOC = P191;
+NET "LED_CLK" LOC = P205;
+NET "LED_OUT" LOC = P76;
 
 ############################ PCI Pin location constraints ########################
 #
