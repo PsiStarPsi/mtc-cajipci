@@ -4,3 +4,6 @@ all:
 	gcc stat.c -o cajipciTRGSTAT
 clean:
 	rm -rf cajipciSOFTTRG cajipciCONFIGTRG cajipciTRGSTAT
+
+intstall:
+	cp cajipci* /usr/local/bin
