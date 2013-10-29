@@ -6,7 +6,7 @@
 #include <stdlib.h> 
 #include <stdint.h>
 
-#define CAJIPCIDEV "/dev/cajipci"
+#define CAJIPCIDEV "/dev/cajipci0"
 #define TRGOFFSET 16
 #define SOFTTRGPOS 16
 

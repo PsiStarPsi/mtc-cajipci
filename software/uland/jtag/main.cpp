@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
 
-#define CAJIPCIDEV "/dev/cajipci"
+#define CAJIPCIDEV "/dev/cajipci0"
 #define JTAGOFFSET 12
 
 int usage(char* name)
