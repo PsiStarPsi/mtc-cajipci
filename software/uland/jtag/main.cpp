@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h> 
+#include <stdint.h>
 
 #define CAJIPCIDEV "/dev/cajipci0"
 #define JTAGOFFSET 12
@@ -20,7 +21,7 @@ int main(int argc, char** argv)
 		usage(argv[0]);
 		return -1;
 	}
-	int chan = atoi(argv[1]);
+	uint32_t chan = atoi(argv[1]);
 	int fd = open(CAJIPCIDEV, O_WRONLY);
 	if(fd < 0)
 	{
@@ -28,5 +29,6 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	lseek(fd, JTAGOFFSET, SEEK_SET);
+	write(fd, &chan, sizeof(uint32_t)); 
 	return 0;
 }
