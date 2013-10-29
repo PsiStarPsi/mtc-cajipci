@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #define CAJIPCIDEV "/dev/cajipci0"
-#define TRGSTATOFFSET 20
+#define TRGSTATOFFSET 0x14
 
 int main(int argc, char** argv)
 {
