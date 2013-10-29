@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	lseek(fd, TRGOFFSET , SEEK_SET);
 	uint32_t reg;
 	read(fd, &reg, sizeof(uint32_t));
-	reg &= 0xFFFF; //clear low bits;
+	reg &= 0xFFFF << 16; //clear low bits;
 	reg |= mask;
 
 	lseek(fd, TRGOFFSET , SEEK_SET);
