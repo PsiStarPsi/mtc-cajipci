@@ -20,6 +20,6 @@ int main(int argc, char** argv)
 	lseek(fd, TRGSTATOFFSET , SEEK_SET);
 	uint32_t reg;
 	read(fd, &reg, sizeof(uint32_t));
-	printf("%d\n", reg);
+	printf("%u\n", reg);
 	return 0;
 }
