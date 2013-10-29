@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	}
 
 	uint16_t mask = strtol(argv[1], NULL, 16);
-	int fd = open(CAJIPCIDEV, O_WRONLY);
+	int fd = open(CAJIPCIDEV, O_RDWR);
 	if(fd < 0)
 	{
 		printf("Could not open the cajipci device %s.\nAre you sure the driver is loaded?\n", CAJIPCIDEV);
