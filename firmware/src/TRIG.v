@@ -92,23 +92,23 @@ end
 
 always @(posedge CLK_80MHZ) begin
 	if(RESET) begin
-		trg_statistics_reg = 0;
-		trg_delay = 7;
-		trg_reg = 0;
+		trg_statistics_reg <= 0;
+		trg_delay <= 7;
+		trg_reg <= 0;
 	end
 	else begin
 		if(current_triggers >= MIN_SCRODS_REQUIRED || soft_trig_pos_edge == 1) begin
-			trg_reg = 'hFFF;
-			trg_delay = 0;
-			trg_statistics_reg = trg_statistics_reg + 32'b1;
+			trg_reg <= 'hFFF;
+			trg_delay <= 0;
+			trg_statistics_reg <= trg_statistics_reg + 32'b1;
 		end
 		else begin
 			if( trg_delay != 7) begin
-				trg_delay = trg_delay +1;
-				trg_reg = 'hFFF;
+				trg_delay <= trg_delay +1;
+				trg_reg <= 'hFFF;
 			end
 			else begin
-				trg_reg = 'h000;
+				trg_reg <= 'h000;
 			end
 		end
 	end
