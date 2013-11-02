@@ -211,7 +211,12 @@ int main(int argc, char** argv)
 		cerr << "Could not open the cajipci driver " << DRV_NAME << endl;
 		return -1;
 	}
-	int data = 1 << SPI_SYNC;
+	
+	
+	int data;
+	::lseek(fd, SEEK_CTL, SEEK_SET);
+	::read(fd, &data, sizeof(int));
+	data |= 1 << SPI_SYNC;
 	printf("Syncing...\n");
 	lseek(fd, SEEK_CTL, SEEK_SET);
 	write(fd, &data, sizeof(int));
