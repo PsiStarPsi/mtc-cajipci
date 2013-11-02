@@ -1,4 +1,4 @@
 all:
-	g++ main.cpp -o cdce_prog
+	g++ cdce_config.cpp -o cajipciCLOCK
 clean:
 	rm -rf cdce_prog
