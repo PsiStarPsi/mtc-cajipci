@@ -183,26 +183,43 @@ int main(int argc, char** argv)
 	if(argc != 3)
 	{
 		usage(argv[0]);
-		return 0;
+		return -1;
 	}
 	char* end;
 	uint chan =  strtol (argv[2], &end, 0);
 	if(*end != '\0')
 	{
 		usage(argv[0]);
-		return 0;		
+		return -1;		
 	}
 	if(chan >2)
 	{
 		usage(argv[0]);
-		return 0;				
+		return -1;				
 	}
 	int writeReg[REG_NUM] = {0};
 	if(!readConfigFile(argv[1], writeReg))
 	{
 		usage(argv[0]);
-		return 0;		
+		return -1;		
 	}
 	writeRegs(writeReg, chan);
 	readRegs(chan);
+	
+	int fd = open(DRV_NAME, O_RDWR);
+	if(fd < 0)
+	{
+		cerr << "Could not open the cajipci driver " << DRV_NAME << endl;
+		return -1;
+	}
+	int data = 1 << SPI_SYNC;
+	printf("Syncing...\n");
+	lseek(fd, SEEK_CTL, SEEK_SET);
+	write(fd, &data, sizeof(int));
+	usleep(100);
+	data = 0;
+	lseek(fd, SEEK_CTL, SEEK_SET);
+	write(fd, &data, sizeof(int));
+	close(fd);
+	return 0;
 }
