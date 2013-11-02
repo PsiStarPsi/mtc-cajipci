@@ -104,9 +104,6 @@ bool writeRegs(int* regs, int chan)
 		data = regs[i];
 		lseek(fd, SEEK_SEND, SEEK_SET);
 		write(fd, &data, sizeof(int));
-
-	    lseek(fd, SEEK_CTL, SEEK_SET);
-		read(fd, &data, sizeof(int));
 		
 		data = (chan << SPI_SEL);
 		lseek(fd, SEEK_CTL, SEEK_SET);
@@ -151,10 +148,6 @@ bool readRegs(int chan)
 		data = readReg[i];
 		lseek(fd, SEEK_SEND, SEEK_SET);
 		write(fd, &data, sizeof(int));
-
-		//
-	    lseek(fd, SEEK_CTL, SEEK_SET);
-		read(fd, &data, sizeof(int));
 		
 		data = (chan << SPI_SEL);
 		lseek(fd, SEEK_CTL, SEEK_SET);
@@ -191,7 +184,7 @@ int main(int argc, char** argv)
 		usage(argv[0]);
 		return -1;		
 	}
-	if(chan >2)
+	if(chan >3)
 	{
 		usage(argv[0]);
 		return -1;				
