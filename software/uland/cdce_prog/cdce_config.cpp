@@ -96,32 +96,22 @@ bool writeRegs(int* regs, int chan)
 	for(int i = 0; i < REG_NUM; i++)
 	{
 		
-		//Clear everything
-		int  data = 0;
-		lseek(fd, SEEK_CTL, SEEK_SET);
-        write(fd, &data, sizeof(int));
-        
-		data = regs[i];
+		int data = regs[i];
 		lseek(fd, SEEK_SEND, SEEK_SET);
 		write(fd, &data, sizeof(int));
-		
-		data = (chan << SPI_SEL);
+		usleep(100);
+		data = chan << SPI_SEL;
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
-        
+        usleep(100);   
 		data &= ~(1 << SPI_START);
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
-	
-		lseek(fd, SEEK_CTL, SEEK_SET);
+		usleep(100);
 		data |= 1 << SPI_START;
+		lseek(fd, SEEK_CTL, SEEK_SET);
 		write(fd, &data, sizeof(int)); 
 		usleep(100);
-/*
-		lseek(fd, SEEK_RCV, SEEK_SET);
-		read(fd, &data, sizeof(int));
-		printf("%d: We wrote %x and read %x\n", i, reg[i], data);
-*/ 
 	}
 	::close(fd);
 }
@@ -140,25 +130,21 @@ bool readRegs(int chan)
 	for(int i = 0; i < REG_NUM; i++)
 	{
 		
-		//Clear everything
-		int  data = 0;
+		int data = readReg[i];
+		lseek(fd, SEEK_SEND, SEEK_SET);
+		write(fd, &data, sizeof(int));
+				
+		data = chan << SPI_SEL;
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
         
-		data = readReg[i];
-		lseek(fd, SEEK_SEND, SEEK_SET);
-		write(fd, &data, sizeof(int));
-		
-		data = (chan << SPI_SEL);
-		lseek(fd, SEEK_CTL, SEEK_SET);
-        write(fd, &data, sizeof(int));
         
 		data &= ~(1 << SPI_START);
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
 	
-		lseek(fd, SEEK_CTL, SEEK_SET);
 		data |= 1 << SPI_START;
+		lseek(fd, SEEK_CTL, SEEK_SET);
 		write(fd, &data, sizeof(int)); 
 		usleep(100);
 
