@@ -84,7 +84,8 @@ module cajipci_top(
     );
 	 
 wire CLK_80MHZ;
-wire CLK_20MHZ;
+wire CLK_42MHZ;
+wire CLK_21MHZ;
 wire CLK_1MHZ;
 wire CLK_66MHZ;
 
@@ -93,7 +94,7 @@ OBUFDS #(
 ) OBUFDS_CLK1 (
 	.O(RF_CLK1_P),
 	.OB(RF_CLK1_N),
-	.I(CLK_20MHZ)
+	.I(CLK_21MHZ)
 	);
 
 OBUFDS #(
@@ -101,7 +102,7 @@ OBUFDS #(
 ) OBUFDS_CLK3 (
 	.O(RF_CLK3_P),
 	.OB(RF_CLK3_N),
-	.I(CLK_20MHZ)
+	.I(CLK_21MHZ)
 	);
 	
 OBUFDS #(
@@ -109,11 +110,11 @@ OBUFDS #(
 ) OBUFDS_CLK2 (
 	.O(RF_CLK2_P),
 	.OB(RF_CLK2_N),
-	.I(CLK_20MHZ)
+	.I(CLK_21MHZ)
 	);
 
 assign SMA[0] = CLK_80MHZ;
-assign SMA[1] = CLK_20MHZ;
+assign SMA[1] = CLK_21MHZ;
 
 
 //CLOCK
@@ -121,11 +122,13 @@ CLOCKS u_clocks (
 		.BOARD_CLOCK(BOARD_CLOCK), 
 		.RST(0),
 		.CLK_80MHZ(CLK_80MHZ), 
-		.CLK_20MHZ(CLK_20MHZ), 
+		.CLK_21MHZ(CLK_21MHZ),
+		.CLK_42MHZ(CLK_42MHZ),
 		.CLK_1MHZ(CLK_1MHZ), 
+		
+		
 		.PCI_CLK(PCI_CLK), 
-		.CLK_66MHZ(CLK_66MHZ), 
-		.LOCKED(LOCKED)
+		.CLK_66MHZ(CLK_66MHZ)
 		);
 
 //SPI for jitter cleaners
@@ -183,7 +186,7 @@ wire [31:0] TRG_STATISTICS;
 wire TRG_SOFT;
 
 TRIG u_trg(
-    .CLK_80MHZ(CLK_80MHZ),
+    .CLK_42MHZ(CLK_42MHZ),
 	 .RESET(0),
     .TRG(TRG), 
     .ACK(ACK), 
@@ -203,8 +206,6 @@ LED u_led (
     .LED_OUT(LED_OUT)
     );
 
-
-
 wire [35:0] CONTROL0;
 
 icon u_icon (
@@ -213,9 +214,10 @@ icon u_icon (
 
 ila u_ila1 (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
-    .CLK(CLK_1MHZ), // IN
-    .TRIG0({SYNC, SPI_CLK_CS, SPI_MISO, SPI_MOSI}) // IN BUS [7:0]
+    .CLK(CLK_80MHZ), // IN
+    .TRIG0({TRG, ACK, TRG_SOFT}) // IN BUS [7:0]
 );
+
 //Wishbone Interconnect
 wire WBM_ACK_I;
 wire [31:0] WBM_ADR_O;
