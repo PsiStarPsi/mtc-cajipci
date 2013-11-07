@@ -61,17 +61,17 @@ module TRG_DRIVER;
 		CLK_80MHZ = 1;
 		TRG_SOFT = 0;
 		RESET = 0;
-		#2;
+		#10;
 		ACK = 'hF;
-		#2;
+		#10;
 		ACK = 'h8;
-		#2;
+		#10;
 		ACK = 'h1e;
-		#2
+		#10
 		ACK = 0;
-		#2
+		#10
 		TRG_SOFT = 1;
-		#4
+		#1
 		TRG_SOFT = 0;
 		
 		

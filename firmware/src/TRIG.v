@@ -39,6 +39,8 @@ assign TRG_STATISTICS = trg_statistics_reg;
 
 reg [2:0] trg_delay;
 
+reg TRG_CLR;
+
 initial begin
 	trg_statistics_reg = 0;
 	trg_reg = 0;
@@ -47,20 +49,45 @@ end
 
 reg soft_trig_pos_edge;
 reg soft_trig_buffered;
-wire soft_trig_edge;
+//wire soft_trig_edge;
+reg soft_trig_edge;
+
+
+always @(posedge TRG_SOFT or posedge TRG_CLR )
+begin
+	if (TRG_CLR)
+		soft_trig_edge <= 0;
+	else 
+		soft_trig_edge <= 1;
+end
+
 
 always @(posedge CLK_80MHZ) begin
-	  soft_trig_buffered <= TRG_SOFT;
+	soft_trig_buffered<= soft_trig_edge;
 end
 
-assign soft_trig_edge = !soft_trig_buffered && TRG_SOFT;
 
-always @(posedge CLK_80MHZ)begin
-	if (soft_trig_edge)
-		soft_trig_pos_edge <= TRG_SOFT;
-	else 
-		soft_trig_pos_edge <= 0;
+always @(posedge CLK_80MHZ) begin
+	TRG_CLR<= soft_trig_buffered;
 end
+
+
+always @(posedge CLK_80MHZ) begin
+	soft_trig_pos_edge<= soft_trig_buffered;
+end
+
+//always @(posedge CLK_80MHZ) begin
+//	  soft_trig_buffered <= TRG_SOFT;
+//end
+//
+//assign soft_trig_edge = !soft_trig_buffered && TRG_SOFT;
+//
+//always @(posedge CLK_80MHZ)begin
+//	if (soft_trig_edge)
+//		soft_trig_pos_edge <= TRG_SOFT;
+//	else 
+//		soft_trig_pos_edge <= 0;
+//end
 
 always @(negedge CLK_80MHZ) begin
 	current_triggers = 0;
