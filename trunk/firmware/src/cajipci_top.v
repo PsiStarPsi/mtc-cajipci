@@ -77,7 +77,10 @@ module cajipci_top(
 		//LED
 		output LED_CLK, 
 		output LED_OE, 
-		output LED_OUT
+		output LED_OUT,
+		
+		//EXTRA
+		output [1:0] SMA
     );
 	 
 wire CLK_80MHZ;
@@ -87,12 +90,20 @@ wire CLK_66MHZ;
 
 OBUFDS #(
 	.IOSTANDARD("LVDS_25")
+) OBUFDS_CLK1 (
+	.O(RF_CLK1_P),
+	.OB(RF_CLK1_N),
+	.I(CLK_20MHZ)
+	);
+
+OBUFDS #(
+	.IOSTANDARD("LVDS_25")
 ) OBUFDS_CLK3 (
 	.O(RF_CLK3_P),
 	.OB(RF_CLK3_N),
 	.I(CLK_20MHZ)
 	);
-
+	
 OBUFDS #(
 	.IOSTANDARD("LVDS_25")
 ) OBUFDS_CLK2 (
@@ -101,14 +112,10 @@ OBUFDS #(
 	.I(CLK_20MHZ)
 	);
 
-OBUFDS #(
-	.IOSTANDARD("LVDS_25")
-) OBUFDS_CLK1 (
-	.O(RF_CLK1_P),
-	.OB(RF_CLK1_N),
-	.I(CLK_20MHZ)
-	);
-	
+assign SMA[0] = CLK_80MHZ;
+assign SMA[1] = CLK_20MHZ;
+
+
 //CLOCK
 CLOCKS u_clocks (
 		.BOARD_CLOCK(BOARD_CLOCK), 
@@ -197,8 +204,7 @@ LED u_led (
     );
 
 
-//Debug
-/*
+
 wire [35:0] CONTROL0;
 
 icon u_icon (
@@ -207,10 +213,9 @@ icon u_icon (
 
 ila u_ila1 (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
-    .CLK(CLK_80MHZ), // IN
-    .TRIG0({ACK, TRG, TRG_SOFT}) // IN BUS [7:0]
+    .CLK(CLK_1MHZ), // IN
+    .TRIG0({SYNC, SPI_CLK_CS, SPI_MISO, SPI_MOSI}) // IN BUS [7:0]
 );
-*/
 //Wishbone Interconnect
 wire WBM_ACK_I;
 wire [31:0] WBM_ADR_O;

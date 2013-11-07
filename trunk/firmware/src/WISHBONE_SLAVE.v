@@ -59,7 +59,7 @@ assign rty_o=1'b0;
 //SPI
 reg [31:0] spi_o_reg;
 reg spi_start;
-reg [2:0] spi_sel_reg;
+reg [1:0] spi_sel_reg;
 
 assign SPI_O=spi_o_reg;
 assign SPI_SEL_O = spi_sel_reg;
@@ -184,6 +184,7 @@ always@(posedge clk_i) begin
 	begin
 		spi_sel_reg <= 2'b0;
 		spi_start <= 2'b0;
+		sync_reg <= 1;
 	end
 	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd2) begin
 		if(sel_i_reg[0]==1'b1) begin
@@ -194,11 +195,13 @@ always@(posedge clk_i) begin
 		else begin
 			spi_start <= spi_start;
 			spi_sel_reg <= spi_sel_reg;
+			sync_reg <= sync_reg;
 		end
 	end
 	else begin
 		spi_start <= spi_start;
 		spi_sel_reg <= spi_sel_reg;
+		sync_reg <= sync_reg;
 	end
 end
 
