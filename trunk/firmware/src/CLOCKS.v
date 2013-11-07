@@ -22,42 +22,41 @@ module CLOCKS(
 	input wire BOARD_CLOCK,
 	input wire RST,
 	output CLK_80MHZ,
-	output CLK_20MHZ,
+	output CLK_21MHZ,
+	output CLK_42MHZ,
 	output reg CLK_1MHZ,
 	input PCI_CLK,
-	output CLK_66MHZ,
-	output LOCKED
+	output CLK_66MHZ
     );
-
-wire LOCKED1;
-wire LOCKED2;
-
-assign LOCKED = LOCKED1 & LOCKED2;
-
+	 
 CLOCK_GEN u_clock_gen (
     .CLKIN_IN(BOARD_CLOCK), 
     .RST_IN(RST), 
-    .CLKFX_OUT(CLK_20MHZ), 
-    .CLKIN_IBUFG_OUT(CLK_80MHZ), 
-    .LOCKED_OUT(LOCKED1)
+    .CLKFX_OUT(CLK_21MHZ), 
+    .CLKIN_IBUFG_OUT(CLK_80MHZ)
+    );
+
+CLOCK_GEN_2X u_clock_gen_2x (
+    .CLKIN_IN(CLK_21MHZ), 
+    .RST_IN(rst), 
+    .CLKFX_OUT(CLK_42MHZ)
     );
 
 CLOCK_GEN_PCI u_clock_gen_pci (
     .CLKIN_IN(PCI_CLK), 
     .RST_IN(RST), 
-    .CLKFX_OUT(CLK_66MHZ), 
-    .LOCKED_OUT(LOCKED2)
+    .CLKFX_OUT(CLK_66MHZ)
     );
 	 
 reg [4:0] counter;
 
 initial CLK_1MHZ = 0;
 
-always @(posedge CLK_20MHZ) begin
+always @(posedge CLK_21MHZ) begin
 	if(RST) 
 		counter <= 0;
 	else begin	
-		if(counter > 19) begin
+		if(counter > 20) begin
 			CLK_1MHZ <= ~CLK_1MHZ;
 			counter <= 0;
 		end
