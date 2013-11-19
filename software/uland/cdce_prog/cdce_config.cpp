@@ -133,16 +133,15 @@ bool readRegs(int chan)
 		int data = readReg[i];
 		lseek(fd, SEEK_SEND, SEEK_SET);
 		write(fd, &data, sizeof(int));
-				
+		usleep(100);
 		data = chan << SPI_SEL;
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
-        
-        
+        usleep(100);   
 		data &= ~(1 << SPI_START);
 		lseek(fd, SEEK_CTL, SEEK_SET);
         write(fd, &data, sizeof(int));
-	
+		usleep(100);
 		data |= 1 << SPI_START;
 		lseek(fd, SEEK_CTL, SEEK_SET);
 		write(fd, &data, sizeof(int)); 
@@ -183,26 +182,5 @@ int main(int argc, char** argv)
 	}
 	writeRegs(writeReg, chan);
 	readRegs(chan);
-	
-	int fd = open(DRV_NAME, O_RDWR);
-	if(fd < 0)
-	{
-		cerr << "Could not open the cajipci driver " << DRV_NAME << endl;
-		return -1;
-	}
-	
-	
-	int data;
-	::lseek(fd, SEEK_CTL, SEEK_SET);
-	::read(fd, &data, sizeof(int));
-	data |= 1 << SPI_SYNC;
-	printf("Syncing...\n");
-	lseek(fd, SEEK_CTL, SEEK_SET);
-	write(fd, &data, sizeof(int));
-	usleep(100);
-	data = 0;
-	lseek(fd, SEEK_CTL, SEEK_SET);
-	write(fd, &data, sizeof(int));
-	close(fd);
 	return 0;
 }
