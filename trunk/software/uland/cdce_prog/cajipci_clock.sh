@@ -17,9 +17,9 @@ CAJIPCI_PATH=/usr/local/mtc/cajipci/
 case "$1" in
 start)
 	cajipciCLOCKOFF;
-	cd $CAJIPCI_PATH/config; /usr/local/bin/cajipciCLOCK reg_encal_off.INI 0; /usr/local/bin/cajipciCLOCK reg_encal_on.INI 0;
-	/usr/local/bin/cajipciCLOCK reg_encal_off.INI 1; /usr/local/bin/cajipciCLOCK reg_encal_on.INI 1;
-	/usr/local/bin/cajipciCLOCK reg_encal_off.INI 2; /usr/local/bin/cajipciCLOCK reg_encal_on.INI 2;
+	cd $CAJIPCI_PATH/config; /usr/local/bin/cajipciCLOCK reg_encal_off.INI 0 >> /dev/null; /usr/local/bin/cajipciCLOCK reg_encal_on.INI 0 >> /dev/null;
+	/usr/local/bin/cajipciCLOCK reg_encal_off.INI 1 >> /dev/null;  /usr/local/bin/cajipciCLOCK reg_encal_on.INI 1 >> /dev/null;
+	/usr/local/bin/cajipciCLOCK reg_encal_off.INI 2 >> /dev/null; /usr/local/bin/cajipciCLOCK reg_encal_on.INI 2 >> /dev/null;
 ;;
 
 stop)
