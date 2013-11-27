@@ -32,6 +32,10 @@ module WISHBONE_SLAVE(
 	output [3:0] MIN_SCRODS_REQUIRED,
 	input [31:0] TRG_STATISTICS,
 	output TRG_SOFT
+	
+	//Trigger veto
+//	output TRG_VETO,
+//	input TRG_VETO_STATUS
 );
 
 `define RECEIVER_FSM_BITS 2
@@ -227,7 +231,7 @@ end
 always@(posedge clk_i) begin
 	if(reset_i) begin
 		trg_mask_reg <= 'hFFF;
-		min_scrod_required_reg <= 12;
+		min_scrod_required_reg <= 15;
 		trg_soft_reg <= 0;
 	end
 	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd4) begin

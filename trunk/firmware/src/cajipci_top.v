@@ -126,7 +126,6 @@ CLOCKS u_clocks (
 		.CLK_42MHZ(CLK_42MHZ),
 		.CLK_1MHZ(CLK_1MHZ), 
 		
-		
 		.PCI_CLK(PCI_CLK), 
 		.CLK_66MHZ(CLK_66MHZ)
 		);
@@ -214,7 +213,7 @@ icon u_icon (
 
 ila u_ila1 (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
-    .CLK(CLK_80MHZ), // IN
+    .CLK(CLK_42MHZ), // IN
     .TRIG0({TRG, ACK, TRG_SOFT}) // IN BUS [7:0]
 );
 
