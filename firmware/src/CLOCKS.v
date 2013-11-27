@@ -50,6 +50,7 @@ CLOCK_GEN_PCI u_clock_gen_pci (
 	 
 reg [4:0] counter;
 
+initial counter = 0;
 initial CLK_1MHZ = 0;
 
 always @(posedge CLK_21MHZ) begin

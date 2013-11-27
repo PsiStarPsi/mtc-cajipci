@@ -44,12 +44,11 @@ reg TRG_CLR;
 initial begin
 	trg_statistics_reg = 0;
 	trg_reg = 0;
-	trg_delay = 3;
+	trg_delay = 7;
 end
 
 reg soft_trig_pos_edge;
 reg soft_trig_buffered;
-//wire soft_trig_edge;
 reg soft_trig_edge;
 
 
@@ -76,7 +75,7 @@ always @(posedge CLK_42MHZ) begin
 	soft_trig_pos_edge<= soft_trig_buffered;
 end
 
-always @(negedge CLK_42MHZ) begin
+always @(posedge CLK_42MHZ) begin
 	current_triggers = 0;
 	if(TRG_MASK[0] == 1 && ACK[0] == 1)
 			current_triggers = current_triggers + 1;
@@ -115,6 +114,9 @@ always @(posedge CLK_42MHZ) begin
 			trg_reg <= 'hFFF;
 			if(trg_delay == 7) begin	//Will not increment the counter for the next 7 cycles.
 				trg_statistics_reg <= trg_statistics_reg + 32'b1;
+				trg_delay <= 0;
+			end
+			else begin
 				trg_delay <= 0;
 			end
 		end
