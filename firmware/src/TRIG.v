@@ -19,26 +19,39 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module TRIG(
-	 input RESET,
-	 input CLK_42MHZ,
-    output [11:0] TRG,
-    input [11:0] ACK,
-	 input [11:0] TRG_MASK,
-	 input [3:0] MIN_SCRODS_REQUIRED,
-	 output [31:0] TRG_STATISTICS,
-	 input TRG_SOFT
+	input RESET,
+	input CLK_42MHZ,
+   output [11:0] TRG,
+   input [11:0] ACK,
+	input [11:0] TRG_MASK,
+	input [3:0] MIN_SCRODS_REQUIRED,
+	output [31:0] TRG_STATISTICS,
+	input TRG_SOFT,
+ 
+	output TRG_NEEDS_VETO,
+	input TRG_FLOW_CTL_EN,
+	input TRG_VETO_RESET
+
     );
 
+reg need_veto;
+assign TRG_NEEDS_VETO = need_veto;
+
+//Trigger accumulator across scrods. Recomputed each clock cycle
 reg [3:0] current_triggers;
 
+//Trigger outputs to the lvds
 reg [11:0] trg_reg;
 assign TRG = trg_reg;
 
+//Number of triggers since startup
 reg [31:0] trg_statistics_reg;
 assign TRG_STATISTICS = trg_statistics_reg;
 
+//Delay for the scrod TRG signal 
 reg [2:0] trg_delay;
 
+//Edge detector for the clear signal
 reg TRG_CLR;
 
 initial begin
@@ -75,6 +88,7 @@ always @(posedge CLK_42MHZ) begin
 	soft_trig_pos_edge<= soft_trig_buffered;
 end
 
+//Adding up all of the trigger bits
 always @(posedge CLK_42MHZ) begin
 	current_triggers = 0;
 	if(TRG_MASK[0] == 1 && ACK[0] == 1)
@@ -103,32 +117,38 @@ always @(posedge CLK_42MHZ) begin
 			current_triggers = current_triggers + 1;
 end
 
+//Main trigger logic.
 always @(posedge CLK_42MHZ) begin
 	if(RESET) begin
 		trg_statistics_reg <= 0;
 		trg_delay <= 7;
 		trg_reg <= 0;
+		need_veto <= 0;
 	end
 	else begin
-		if(current_triggers >= MIN_SCRODS_REQUIRED || soft_trig_pos_edge == 1) begin
-			trg_reg <= 'hFFF;
-			if(trg_delay == 7) begin	//Will not increment the counter for the next 7 cycles.
-				trg_statistics_reg <= trg_statistics_reg + 32'b1;
-				trg_delay <= 0;
-			end
-			else begin
-				trg_delay <= 0;
-			end
-		end
-		else begin
-			if( trg_delay != 7) begin
-				trg_delay <= trg_delay +1;
+		if (!(need_veto & TRG_FLOW_CTL_EN)) begin
+			if(current_triggers >= MIN_SCRODS_REQUIRED || soft_trig_pos_edge == 1) begin
 				trg_reg <= 'hFFF;
-			end
-			else begin
-				trg_reg <= 'h000;
-			end
+				if(trg_delay == 7) begin	//Will not increment the counter for the next 7 cycles.
+					trg_statistics_reg <= trg_statistics_reg + 32'b1;
+					trg_delay <= 0;
+					need_veto <= 1;
+				end
+				else begin
+					trg_delay <= 0;
+				end
+			end		
 		end
+		else
+			if(TRG_VETO_RESET | !TRG_FLOW_CTL_EN)
+				need_veto <= 0;
+				
+		if( trg_delay != 7) begin
+			trg_delay <= trg_delay +1;
+			trg_reg <= 'hfff;
+		end
+		else
+			trg_reg <= 'h000;		
 	end
 end
 

@@ -31,11 +31,12 @@ module WISHBONE_SLAVE(
 	output [11:0] TRG_MASK,
 	output [3:0] MIN_SCRODS_REQUIRED,
 	input [31:0] TRG_STATISTICS,
-	output TRG_SOFT
+	output TRG_SOFT,
 	
 	//Trigger veto
-//	output TRG_VETO,
-//	input TRG_VETO_STATUS
+	input TRG_NEEDS_VETO,
+	output TRG_FLOW_CTL_EN,
+	output TRG_VETO_RESET
 );
 
 `define RECEIVER_FSM_BITS 2
@@ -92,8 +93,23 @@ assign TRG_SOFT = trg_soft_reg;
 
 initial begin
 	trg_mask_reg = 'hFFF;
-	min_scrod_required_reg = 7;
+	min_scrod_required_reg = 15;
 	trg_soft_reg = 0;
+end
+
+
+//veto 
+reg trg_flow_ctl_en_reg;
+assign TRG_FLOW_CTL_EN = trg_flow_ctl_en_reg;
+reg trg_veto_reset_reg;
+assign TRG_VETO_RESET = trg_veto_reset_reg;
+
+reg [2:0] trg_veto_reset_counter;
+
+initial begin
+	trg_flow_ctl_en_reg = 0;
+	trg_veto_reset_reg = 0;
+	trg_veto_reset_counter = 0;
 end
 
 always@(posedge clk_i) begin
@@ -157,8 +173,9 @@ always@(*) begin
 	10'd1: dat_o_reg <= SPI_I; //SPI data reg from the device
 	10'd2: dat_o_reg <= {sync_reg, spi_sel_reg, SPI_DONE_I,spi_start}; //SPI_control_register.
 	10'd3: dat_o_reg <= {jtag_mux_reg};	//JTAG MUX
-	10'd4: dat_o_reg <= {trg_soft_reg, min_scrod_required_reg, trg_mask_reg};  //soft trigger, min scrods required for trigger, scrod mask.
+	10'd4: dat_o_reg <= {trg_flow_ctl_en_reg, trg_soft_reg, min_scrod_required_reg, trg_mask_reg};  //soft trigger, min scrods required for trigger, scrod mask.
 	10'd5: dat_o_reg <= {TRG_STATISTICS};	//number of triggers since reset
+	10'd6: dat_o_reg <= {31'b0,TRG_NEEDS_VETO};	//number of triggers since reset
 	default: dat_o_reg <= 32'b0;
 	endcase
 end
@@ -233,6 +250,7 @@ always@(posedge clk_i) begin
 		trg_mask_reg <= 'hFFF;
 		min_scrod_required_reg <= 15;
 		trg_soft_reg <= 0;
+		trg_flow_ctl_en_reg <= 0;
 	end
 	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd4) begin
 		if(sel_i_reg[0]==1'b1) 
@@ -249,14 +267,40 @@ always@(posedge clk_i) begin
 			min_scrod_required_reg[3:0] <= min_scrod_required_reg[3:0];
 		end
 		
-		if(sel_i_reg[2]==1'b1) 
+		if(sel_i_reg[2]==1'b1) begin
 			trg_soft_reg<=dat_i_reg[16];
-		else 
+			trg_flow_ctl_en_reg<=dat_i_reg[17];
+		end
+		else begin		
 			trg_soft_reg<= trg_soft_reg;
+			trg_flow_ctl_en_reg<=trg_flow_ctl_en_reg;
+		end
 	end else begin
 		trg_mask_reg <= trg_mask_reg;
 		min_scrod_required_reg <= min_scrod_required_reg;
 		trg_soft_reg <= trg_soft_reg;
+		trg_flow_ctl_en_reg<=trg_flow_ctl_en_reg;
+	end
+end
+
+always@(posedge clk_i) begin
+	if(reset_i) begin
+		trg_veto_reset_counter <= 0;
+		trg_veto_reset_reg <= 0;
+	end
+	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd6) 
+		if(sel_i_reg[0]==1'b1)  
+			if(dat_i_reg[0] == 1) begin
+				trg_veto_reset_reg <= 1;
+				trg_veto_reset_counter <= 7;
+			end
+	else begin
+		if(trg_veto_reset_counter > 0) begin
+			trg_veto_reset_counter <= trg_veto_reset_counter - 1;
+			trg_veto_reset_reg <= 1;
+		end
+		else 
+			trg_veto_reset_reg <= 0;
 	end
 end
 
