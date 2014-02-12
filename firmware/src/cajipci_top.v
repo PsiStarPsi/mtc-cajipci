@@ -113,8 +113,8 @@ OBUFDS #(
 	.I(CLK_21MHZ)
 	);
 
-assign SMA[0] = CLK_80MHZ;
-assign SMA[1] = CLK_21MHZ;
+assign SMA[0] = 0;
+assign SMA[1] = 0;
 
 
 //CLOCK
@@ -189,7 +189,7 @@ wire TRG_FLOW_CTL_EN;
 wire TRG_VETO_RESET;
 
 wire [2:0] trg_delay_out;
-wire [19:0] wait_counter_out;
+wire [3:0] TRG_SCROD_COUNT;
 
 TRIG u_trg(
     .CLK_42MHZ(CLK_42MHZ),
@@ -204,7 +204,7 @@ TRIG u_trg(
 	 .TRG_FLOW_CTL_EN(TRG_FLOW_CTL_EN),
 	 .TRG_VETO_RESET(TRG_VETO_RESET),
 	 .trg_delay_out(trg_delay_out),
-	 .wait_counter_out(wait_counter_out)
+	 .TRG_SCROD_COUNT(TRG_SCROD_COUNT)
     );
 
 //LEDS
@@ -231,7 +231,7 @@ wire [2:0] trg_veto_reset_counter_out;
 ila trg_ila (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
     .CLK(CLK_42MHZ), // IN
-    .TRIG0({TRG_FLOW_CTL_EN, TRG_VETO_RESET, TRG_NEEDS_VETO, trg_veto_reset_counter_out, trg_delay_out, wait_counter_out, TRG, ACK, TRG_SOFT}) // IN BUS [24:0]
+    .TRIG0({TRG_FLOW_CTL_EN, TRG_VETO_RESET, TRG_NEEDS_VETO, trg_veto_reset_counter_out, trg_delay_out, TRG_SCROD_COUNT, TRG, ACK, TRG_SOFT}) // IN BUS [24:0]
 );
 
 //Wishbone Interconnect

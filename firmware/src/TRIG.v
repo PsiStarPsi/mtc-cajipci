@@ -33,8 +33,7 @@ module TRIG(
 	input TRG_VETO_RESET,
 	
 	output [2:0] trg_delay_out,
-	output [19:0] wait_counter_out
-	
+	output [3:0] TRG_SCROD_COUNT
     );
 
 reg need_veto;
@@ -42,6 +41,8 @@ assign TRG_NEEDS_VETO = need_veto;
 
 //Trigger accumulator across scrods. Recomputed each clock cycle
 reg [3:0] current_triggers;
+
+assign TRG_SCROD_COUNT = current_triggers;
 
 //Trigger outputs to the lvds
 reg [11:0] trg_reg;
@@ -93,31 +94,18 @@ end
 
 //Adding up all of the trigger bits
 always @(posedge CLK_42MHZ) begin
-	current_triggers = 0;
-	if(TRG_MASK[0] == 1 && ACK[0] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[1] == 1 && ACK[1] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[2] == 1 && ACK[2] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[3] == 1 && ACK[3] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[4] == 1 && ACK[4] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[5] == 1 && ACK[5] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[6] == 1 && ACK[6] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[7] == 1 && ACK[7] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[8] == 1 && ACK[8] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[9] == 1 && ACK[9] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[10] == 1 && ACK[10] == 1)
-			current_triggers = current_triggers + 1;
-	if(TRG_MASK[11] == 1 && ACK[11] == 1)
-			current_triggers = current_triggers + 1;
+	current_triggers <= (TRG_MASK[0] & ACK[0]) + 
+	(TRG_MASK[1] & ACK[1]) +
+	(TRG_MASK[2] & ACK[2]) +
+	(TRG_MASK[3] & ACK[3]) +
+	(TRG_MASK[4] & ACK[4]) +
+	(TRG_MASK[5] & ACK[5]) +
+	(TRG_MASK[6] & ACK[6]) +
+	(TRG_MASK[7] & ACK[7]) +
+	(TRG_MASK[8] & ACK[8]) +
+	(TRG_MASK[9] & ACK[9]) +
+	(TRG_MASK[10] & ACK[10]) +
+	(TRG_MASK[11] & ACK[11]);
 end
 
 //Main trigger logic.
@@ -172,6 +160,5 @@ always @(posedge CLK_42MHZ) begin
 end
 
 assign trg_delay_out = trg_delay;
-assign wait_counter_out = wait_counter;
 
 endmodule
