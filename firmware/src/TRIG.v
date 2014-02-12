@@ -30,8 +30,11 @@ module TRIG(
  
 	output TRG_NEEDS_VETO,
 	input TRG_FLOW_CTL_EN,
-	input TRG_VETO_RESET
-
+	input TRG_VETO_RESET,
+	
+	output [2:0] trg_delay_out,
+	output [19:0] wait_counter_out
+	
     );
 
 reg need_veto;
@@ -118,6 +121,8 @@ always @(posedge CLK_42MHZ) begin
 end
 
 //Main trigger logic.
+reg start_count;
+reg [19:0] wait_counter;
 always @(posedge CLK_42MHZ) begin
 	if(RESET) begin
 		trg_statistics_reg <= 0;
@@ -139,17 +144,34 @@ always @(posedge CLK_42MHZ) begin
 				end
 			end		
 		end
-		else
+		else begin
 			if(TRG_VETO_RESET | !TRG_FLOW_CTL_EN)
-				need_veto <= 0;
+				start_count <=1;
+			else 
+				start_count <=0;
+			if(start_count==1)
+				wait_counter <= 660000;
+			else begin
+				if (wait_counter > 1)
+					wait_counter <= wait_counter-1;
+				else if (wait_counter==1)
+					begin
+						need_veto <= 0;
+						wait_counter<=0;
+					end
+			end 
 				
 		if( trg_delay != 7) begin
 			trg_delay <= trg_delay +1;
 			trg_reg <= 'hfff;
 		end
 		else
-			trg_reg <= 'h000;		
+			trg_reg <= 'h000;	
+		end
 	end
 end
+
+assign trg_delay_out = trg_delay;
+assign wait_counter_out = wait_counter;
 
 endmodule

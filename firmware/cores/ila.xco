@@ -1,16 +1,40 @@
 ##############################################################
+#
+# Xilinx Core Generator version 12.4
+# Date: Wed Feb 12 16:05:11 2014
+#
 ##############################################################
+#
+#  This file contains the customisation parameters for a
+#  Xilinx CORE Generator IP GUI. It is strongly recommended
+#  that you do not manually alter this file as it may cause
+#  unexpected and unsupported behavior.
+#
 ##############################################################
+#
+# BEGIN Project Options
+SET addpads = false
+SET asysymbol = true
+SET busformat = BusFormatAngleBracketNotRipped
+SET createndf = false
 SET designentry = Verilog
-SET BusFormat = BusFormatAngleBracketNotRipped
-SET devicefamily = spartan3
 SET device = xc3s400
+SET devicefamily = spartan3
+SET flowvendor = Foundation_ISE
+SET formalverification = false
+SET foundationsym = false
+SET implementationfiletype = Ngc
 SET package = pq208
+SET removerpms = false
+SET simulationfiles = Structural
 SET speedgrade = -5
-SET FlowVendor = Foundation_ISE
-SET VerilogSim = True
-SET VHDLSim = True
+SET verilogsim = true
+SET vhdlsim = true
+# END Project Options
+# BEGIN Select
 SELECT ILA_(ChipScope_Pro_-_Integrated_Logic_Analyzer) family Xilinx,_Inc. 1.03.a
+# END Select
+# BEGIN Parameters
 CSET component_name=ila
 CSET counter_width_1=Disabled
 CSET counter_width_10=Disabled
@@ -84,7 +108,7 @@ CSET max_sequence_levels=1
 CSET number_of_trigger_ports=1
 CSET sample_data_depth=512
 CSET sample_on=Rising
-CSET trigger_port_width_1=25
+CSET trigger_port_width_1=50
 CSET trigger_port_width_10=8
 CSET trigger_port_width_11=8
 CSET trigger_port_width_12=8
@@ -101,3 +125,6 @@ CSET trigger_port_width_7=8
 CSET trigger_port_width_8=8
 CSET trigger_port_width_9=8
 CSET use_rpms=true
+# END Parameters
+GENERATE
+# CRC: 84fe1165

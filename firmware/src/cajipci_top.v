@@ -188,6 +188,8 @@ wire TRG_NEEDS_VETO;
 wire TRG_FLOW_CTL_EN;
 wire TRG_VETO_RESET;
 
+wire [2:0] trg_delay_out;
+wire [19:0] wait_counter_out;
 
 TRIG u_trg(
     .CLK_42MHZ(CLK_42MHZ),
@@ -200,7 +202,9 @@ TRIG u_trg(
 	 .TRG_SOFT(TRG_SOFT),
 	 .TRG_NEEDS_VETO(TRG_NEEDS_VETO),
 	 .TRG_FLOW_CTL_EN(TRG_FLOW_CTL_EN),
-	 .TRG_VETO_RESET(TRG_VETO_RESET)
+	 .TRG_VETO_RESET(TRG_VETO_RESET),
+	 .trg_delay_out(trg_delay_out),
+	 .wait_counter_out(wait_counter_out)
     );
 
 //LEDS
@@ -214,15 +218,20 @@ LED u_led (
     );
 
 wire [35:0] CONTROL0;
+wire [35:0] CONTROL1;
 
 icon u_icon (
-    .CONTROL0(CONTROL0) // INOUT BUS [35:0]
+   .CONTROL0(CONTROL0)
 );
 
-ila u_ila1 (
+//wire [19:0] trg_veto_reset_counter_out;
+wire [2:0] trg_veto_reset_counter_out;
+
+
+ila trg_ila (
     .CONTROL(CONTROL0), // INOUT BUS [35:0]
     .CLK(CLK_42MHZ), // IN
-    .TRIG0({TRG, ACK, TRG_SOFT}) // IN BUS [7:0]
+    .TRIG0({TRG_FLOW_CTL_EN, TRG_VETO_RESET, TRG_NEEDS_VETO, trg_veto_reset_counter_out, trg_delay_out, wait_counter_out, TRG, ACK, TRG_SOFT}) // IN BUS [24:0]
 );
 
 //Wishbone Interconnect
@@ -251,7 +260,8 @@ wire [3:0] WBS_SEL_I;
 wire WBS_STB_I;
 wire WBS_WE_I;
 wire WB_INT;
-	
+
+
 //PCI Controll
 WISHBONE_SLAVE u_wishbone_slave (
 	.clk_i(CLK_66MHZ),
@@ -284,7 +294,8 @@ WISHBONE_SLAVE u_wishbone_slave (
 	.TRG_SOFT(TRG_SOFT),
 	.TRG_NEEDS_VETO(TRG_NEEDS_VETO),
 	.TRG_FLOW_CTL_EN(TRG_FLOW_CTL_EN),
-	.TRG_VETO_RESET(TRG_VETO_RESET)
+	.TRG_VETO_RESET(TRG_VETO_RESET),
+	.trg_veto_reset_counter_out(trg_veto_reset_counter_out)
 	);
 
 //PCI MASTER
