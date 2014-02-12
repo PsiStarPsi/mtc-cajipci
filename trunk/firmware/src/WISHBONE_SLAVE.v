@@ -36,7 +36,9 @@ module WISHBONE_SLAVE(
 	//Trigger veto
 	input TRG_NEEDS_VETO,
 	output TRG_FLOW_CTL_EN,
-	output TRG_VETO_RESET
+	output TRG_VETO_RESET,
+//	output [19:0] trg_veto_reset_counter_out
+	output [2:0] trg_veto_reset_counter_out
 );
 
 `define RECEIVER_FSM_BITS 2
@@ -105,6 +107,8 @@ reg trg_veto_reset_reg;
 assign TRG_VETO_RESET = trg_veto_reset_reg;
 
 reg [2:0] trg_veto_reset_counter;
+//reg [19:0] trg_veto_reset_counter; //LM: this is now doing double duty to wait for ~10ms before realeasing the veto. max count=2^20*1000/66 ns= ~15.88ms
+											  //10ms are 660,000 counts.
 
 initial begin
 	trg_flow_ctl_en_reg = 0;
@@ -283,18 +287,64 @@ always@(posedge clk_i) begin
 	end
 end
 
-always@(posedge clk_i) begin
+//always@(posedge clk_i) begin //LM original
+//	if(reset_i) begin
+//		trg_veto_reset_counter <= 0;
+//		trg_veto_reset_reg <= 0;
+//	end
+//	else begin
+//		if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd6)
+//			if(sel_i_reg[0]==1'b1) 
+//				if(dat_i_reg[0] == 1) begin
+//					trg_veto_reset_reg <= 1;
+//					trg_veto_reset_counter <= 7;
+//				end
+//		if(trg_veto_reset_counter > 0) begin
+//			trg_veto_reset_counter <= trg_veto_reset_counter - 1;
+//			trg_veto_reset_reg <= 1;
+//		end
+//		else 
+//			trg_veto_reset_reg <= 0;
+//	end
+//end
+
+//always@(posedge clk_i) begin //LM adds wait time from the burst received - it should also accumulate other bursts coming in while waiting
+//	if(reset_i) begin
+//		trg_veto_reset_counter <= 0;
+//		trg_veto_reset_reg <= 0;
+//	end
+//	else begin
+//		if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd6)
+//			if(sel_i_reg[0]==1'b1) 
+//				if(dat_i_reg[0] == 1) begin
+//					trg_veto_reset_reg <= 0;
+//					trg_veto_reset_counter <= 660000;
+//				end
+//		else if(trg_veto_reset_counter > 7) begin
+//			trg_veto_reset_counter <= trg_veto_reset_counter - 1;
+//			trg_veto_reset_reg <= 0;
+//		end
+//		else if(trg_veto_reset_counter > 0) begin
+//			trg_veto_reset_counter <= trg_veto_reset_counter - 1;
+//			trg_veto_reset_reg <= 1;
+//		end
+//		else 
+//			trg_veto_reset_reg <= 0;
+//	end
+//end
+
+always@(posedge clk_i) begin //Serge original
 	if(reset_i) begin
 		trg_veto_reset_counter <= 0;
 		trg_veto_reset_reg <= 0;
 	end
-	else if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd6) 
-		if(sel_i_reg[0]==1'b1)  
-			if(dat_i_reg[0] == 1) begin
-				trg_veto_reset_reg <= 1;
-				trg_veto_reset_counter <= 7;
-			end
 	else begin
+		if(we_i_reg==1'b1 && (state==REQ_SINGLE_RECEIVED || state==REQ_BURST_RECEIVED) && adr_i_reg==10'd6)
+			if(sel_i_reg[0]==1'b1) 
+				if(dat_i_reg[0] == 1) begin
+					trg_veto_reset_reg <= 1;
+					trg_veto_reset_counter <= 7;
+				end
 		if(trg_veto_reset_counter > 0) begin
 			trg_veto_reset_counter <= trg_veto_reset_counter - 1;
 			trg_veto_reset_reg <= 1;
@@ -304,4 +354,6 @@ always@(posedge clk_i) begin
 	end
 end
 
+ 
+assign trg_veto_reset_counter_out = trg_veto_reset_counter;
 endmodule
