@@ -203,7 +203,6 @@ TRIG u_trg(
 	 .TRG_NEEDS_VETO(TRG_NEEDS_VETO),
 	 .TRG_FLOW_CTL_EN(TRG_FLOW_CTL_EN),
 	 .TRG_VETO_RESET(TRG_VETO_RESET),
-	 .trg_delay_out(trg_delay_out),
 	 .TRG_SCROD_COUNT(TRG_SCROD_COUNT)
     );
 
