@@ -31,8 +31,6 @@ module TRIG(
 	output TRG_NEEDS_VETO,
 	input TRG_FLOW_CTL_EN,
 	input TRG_VETO_RESET,
-	
-	output [2:0] trg_delay_out,
 	output [3:0] TRG_SCROD_COUNT
     );
 
@@ -61,7 +59,8 @@ reg TRG_CLR;
 initial begin
 	trg_statistics_reg = 0;
 	trg_reg = 0;
-	trg_delay = 7;
+	trg_delay = 0;
+	current_triggers = 0;
 end
 
 reg soft_trig_pos_edge;
@@ -109,56 +108,67 @@ always @(posedge CLK_42MHZ) begin
 end
 
 //Main trigger logic.
-reg start_count;
 reg [19:0] wait_counter;
+
+`define TRIGGER_FSM_BITS 3
+reg [`TRIGGER_FSM_BITS-1:0] state;
+parameter IDLE=`TRIGGER_FSM_BITS'h0,
+TRG_START=`TRIGGER_FSM_BITS'h1,
+TRG_DONE=`TRIGGER_FSM_BITS'h2,
+VETO_NEEDED=`TRIGGER_FSM_BITS'h3,
+VETO_WAIT=`TRIGGER_FSM_BITS'h4;
+
+initial state = IDLE;
+
 always @(posedge CLK_42MHZ) begin
 	if(RESET) begin
-		trg_statistics_reg <= 0;
-		trg_delay <= 7;
-		trg_reg <= 0;
 		need_veto <= 0;
+		trg_statistics_reg <= 0;
+		trg_delay <= 0;
+		trg_reg <= 0;
+		state <= IDLE;
 	end
 	else begin
-		if (!(need_veto & TRG_FLOW_CTL_EN)) begin
-			if(current_triggers >= MIN_SCRODS_REQUIRED || soft_trig_pos_edge == 1) begin
+		case(state)
+			IDLE: begin			//IDLE state waiting for trigger
+				need_veto <= 0;
+				trg_reg <= 'h000;
+				if((current_triggers >= MIN_SCRODS_REQUIRED) || soft_trig_pos_edge == 1) begin
+					state <= TRG_START;
+					trg_delay <= 7;
+				end
+			end
+			TRG_START: begin	//Trigger condition met. Send global trigger. Stick around for 7 clock cycles.
 				trg_reg <= 'hFFF;
-				if(trg_delay == 7) begin	//Will not increment the counter for the next 7 cycles.
-					trg_statistics_reg <= trg_statistics_reg + 32'b1;
-					trg_delay <= 0;
+				trg_delay <= trg_delay - 1;
+				if(trg_delay == 0)
+					state <= TRG_DONE;
+			end
+			TRG_DONE: begin	//7 clock cycles have passed. If flow control is off go back to idle, otherwise go to wait veto state.
+				trg_reg <= 'h000;
+				if(TRG_FLOW_CTL_EN) begin
 					need_veto <= 1;
+					state <= VETO_NEEDED;
 				end
 				else begin
-					trg_delay <= 0;
+					need_veto <= 0;
+					state <= IDLE;
 				end
-			end		
-		end
-		else begin
-			if(TRG_VETO_RESET | !TRG_FLOW_CTL_EN)
-				start_count <=1;
-			else 
-				start_count <=0;
-			if(start_count==1)
-				wait_counter <= 660000;
-			else begin
-				if (wait_counter > 1)
-					wait_counter <= wait_counter-1;
-				else if (wait_counter==1)
-					begin
-						need_veto <= 0;
-						wait_counter<=0;
-					end
-			end 
-				
-		if( trg_delay != 7) begin
-			trg_delay <= trg_delay +1;
-			trg_reg <= 'hfff;
-		end
-		else
-			trg_reg <= 'h000;	
-		end
+			end
+			VETO_NEEDED: begin	//Wait for the veto clear. Once recieved go to the wait state for 660000 cycles ~15ms. 
+				if(TRG_VETO_RESET) begin
+					state <= VETO_WAIT;
+					wait_counter <= 660000;
+				end
+			end
+			VETO_WAIT: begin		//Wait untill the counter runs out, go back to IDLE.
+				wait_counter <= wait_counter -1;
+				if(wait_counter == 0) begin
+					state <= IDLE;
+				end
+			end
+		endcase
 	end
 end
-
-assign trg_delay_out = trg_delay;
 
 endmodule
