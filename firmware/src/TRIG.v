@@ -31,7 +31,9 @@ module TRIG(
 	output TRG_NEEDS_VETO,
 	input TRG_FLOW_CTL_EN,
 	input TRG_VETO_RESET,
-	output [3:0] TRG_SCROD_COUNT
+	output [3:0] TRG_SCROD_COUNT,
+	output [2:0] state_debug,
+	output [19:0] wait_counter_debug
     );
 
 reg need_veto;
@@ -67,6 +69,9 @@ reg soft_trig_pos_edge;
 reg soft_trig_buffered;
 reg soft_trig_edge;
 
+//metastability resolution for input triggers
+reg [11:0] ACK_delayed;
+
 
 always @(posedge TRG_SOFT or posedge TRG_CLR )
 begin
@@ -91,20 +96,24 @@ always @(posedge CLK_42MHZ) begin
 	soft_trig_pos_edge<= soft_trig_buffered;
 end
 
+always @(posedge CLK_42MHZ) begin
+	ACK_delayed<=ACK;
+end
+
 //Adding up all of the trigger bits
 always @(posedge CLK_42MHZ) begin
-	current_triggers <= (TRG_MASK[0] & ACK[0]) + 
-	(TRG_MASK[1] & ACK[1]) +
-	(TRG_MASK[2] & ACK[2]) +
-	(TRG_MASK[3] & ACK[3]) +
-	(TRG_MASK[4] & ACK[4]) +
-	(TRG_MASK[5] & ACK[5]) +
-	(TRG_MASK[6] & ACK[6]) +
-	(TRG_MASK[7] & ACK[7]) +
-	(TRG_MASK[8] & ACK[8]) +
-	(TRG_MASK[9] & ACK[9]) +
-	(TRG_MASK[10] & ACK[10]) +
-	(TRG_MASK[11] & ACK[11]);
+	current_triggers <= (TRG_MASK[0] & ACK_delayed[0]) + 
+	(TRG_MASK[1] & ACK_delayed[1]) +
+	(TRG_MASK[2] & ACK_delayed[2]) +
+	(TRG_MASK[3] & ACK_delayed[3]) +
+	(TRG_MASK[4] & ACK_delayed[4]) +
+	(TRG_MASK[5] & ACK_delayed[5]) +
+	(TRG_MASK[6] & ACK_delayed[6]) +
+	(TRG_MASK[7] & ACK_delayed[7]) +
+	(TRG_MASK[8] & ACK_delayed[8]) +
+	(TRG_MASK[9] & ACK_delayed[9]) +
+	(TRG_MASK[10] & ACK_delayed[10]) +
+	(TRG_MASK[11] & ACK_delayed[11]);
 end
 
 //Main trigger logic.
@@ -135,6 +144,7 @@ always @(posedge CLK_42MHZ) begin
 				trg_reg <= 'h000;
 				if((current_triggers >= MIN_SCRODS_REQUIRED) || soft_trig_pos_edge == 1) begin
 					state <= TRG_START;
+					trg_statistics_reg <= trg_statistics_reg + 1;
 					trg_delay <= 7;
 				end
 			end
@@ -170,5 +180,8 @@ always @(posedge CLK_42MHZ) begin
 		endcase
 	end
 end
+assign state_debug = state;
+assign wait_counter_debug = wait_counter;
+
 
 endmodule
